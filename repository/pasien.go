@@ -31,7 +31,7 @@ func (pr *pasienRepository) RegisterPasien(ctx context.Context, pasien entities.
 }
 func (pr *pasienRepository) GetAllPasien(ctx context.Context) ([]entities.Pasien, error) {
 	var pasien []entities.Pasien
-	if err := pr.connection.Table("pasien").Find(&pasien).Error; err != nil {
+	if err := pr.connection.Table("pasiens").Find(&pasien).Error; err != nil {
 		return nil, err
 	}
 	return pasien, nil
