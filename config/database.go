@@ -4,16 +4,16 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/Caknoooo/golang-clean_template/entities"
 	"github.com/joho/godotenv"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
-	// "github.com/Caknoooo/golang-clean_template/entities"
 )
 
-func SetUpDatabaseConnection() *gorm.DB{
-	if os.Getenv("APP_ENV") != "Production"{
+func SetUpDatabaseConnection() *gorm.DB {
+	if os.Getenv("APP_ENV") != "Production" {
 		err := godotenv.Load(".env")
-		if err != nil{
+		if err != nil {
 			fmt.Println(err)
 			panic(err)
 		}
@@ -34,23 +34,37 @@ func SetUpDatabaseConnection() *gorm.DB{
 		PreferSimpleProtocol: true,
 	}), &gorm.Config{})
 
-	if err != nil{
+	if err != nil {
 		fmt.Println(err)
 		panic(err)
 	}
 
-	// if err := db.AutoMigrate(
-	// 	entities.User{},
-	// ); err != nil{
-	// 	fmt.Println(err)
-	// 	panic(err)
-	// }
+	if err := db.AutoMigrate(
+		entities.User{},
+		entities.Dokter{},
+		entities.Jenis_Ruangan{},
+		entities.Obat{},
+		entities.Pasien{},
+		entities.Pembelian_Obat{},
+		entities.Perawat{},
+		entities.Poli{},
+		entities.Resep{},
+		entities.Ruangan{},
+		entities.Sesi_Dokter{},
+		entities.Sesi_Jaga_Nginap{},
+		entities.Tranksaksi_Reservasi_Diagnosa{},
+		entities.Transaksi_Reservasi{},
+		entities.Transaksi{},
+	); err != nil {
+		fmt.Println(err)
+		panic(err)
+	}
 
 	fmt.Println("Database Connected")
 	return db
 }
 
-func ClosDatabaseConnection(db *gorm.DB){
+func ClosDatabaseConnection(db *gorm.DB) {
 	dbSQL, err := db.DB()
 	if err != nil {
 		fmt.Println(err)
