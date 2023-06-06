@@ -20,24 +20,28 @@ func Router(route *gin.Engine, userController controller.UserController, jwtServ
 
 	pasienRoutes := route.Group("/api/pasien")
 	{
+		pasienRoutes.POST("/register", pasienController.RegisterPasien)
 		pasienRoutes.GET("", pasienController.GetAllPasien)
 		// Add other pasien routes here if needed
 	}
 
 	dokterRoutes := route.Group("/api/dokter")
 	{
+		dokterRoutes.POST("/new", dokterController.RegisterDokter)
 		dokterRoutes.GET("", dokterController.GetAllDokter)
 		dokterRoutes.GET("/:id", dokterController.GetDokterByID)
 	}
 
 	transaksiRoutes := route.Group("/api/transaksi")
 	{
+		transaksiRoutes.POST("/new", transaksiController.NewTransaksi)
 		transaksiRoutes.GET("/:id", transaksiController.GetTransaksiByIDPasien)
 		transaksiRoutes.GET("/all", transaksiController.GetAllTransaksi)
 	}
 
 	ruanganRoutes := route.Group("/api/ruangan")
 	{
+
 		ruanganRoutes.GET("", ruanganController.GetAllRuangan)
 	}
 

@@ -4,11 +4,14 @@ import (
 	"net/http"
 
 	//"github.com/Caknoooo/golang-clean_template/entities"
+	"github.com/Caknoooo/golang-clean_template/dto"
 	"github.com/Caknoooo/golang-clean_template/services"
+	"github.com/Caknoooo/golang-clean_template/utils"
 	"github.com/gin-gonic/gin"
 )
 
 type DokterController interface {
+	RegisterDokter(ctx *gin.Context)
 	GetAllDokter(ctx *gin.Context)
 	GetDokterByID(ctx *gin.Context)
 }
@@ -21,6 +24,24 @@ func NewDokterController(ds services.DokterService) DokterController {
 	return &dokterController{
 		dokterService: ds,
 	}
+}
+
+func (dc *dokterController) RegisterDokter(ctx *gin.Context) {
+	var dokter dto.DokterCreateDTO
+	if err := ctx.ShouldBind(&dokter); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	}
+
+	result, err := dc.dokterService.RegisterDokter(ctx.Request.Context(), dokter)
+
+	if err != nil {
+		res := utils.BuildResponseFailed("Gagal Menambahkan Pasien", "Failed", utils.EmptyObj{})
+		ctx.JSON(http.StatusBadRequest, res)
+		return
+	}
+
+	res := utils.BuildResponseSuccess("Berhasil Menambahkan dokter", result)
+	ctx.JSON(http.StatusOK, res)
 }
 
 func (dc *dokterController) GetAllDokter(ctx *gin.Context) {

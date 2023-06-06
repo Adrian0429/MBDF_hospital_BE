@@ -1,6 +1,6 @@
-package entities
+package dto
 
-type Pasien struct {
+type NewTransaksi struct {
 	NIK_pasien          string `gorm:"type:char(16);primaryKey;not null" json:"nik_pasien"`
 	Nama_Pasien         string `gorm:"type:varchar(50);not null" json:"nama"`
 	Jenis_Kelamin       string `gorm:"type:char(1);not null" json:"jenis_kelamin"`
@@ -9,6 +9,4 @@ type Pasien struct {
 	Email               string `gorm:"type:varchar(100)" json:"email"`
 	Password            string `gorm:"type:varchar(100)" json:"password"`
 	Tanggal_Daftar_Akun string `gorm:"type:date" json:"tanggal_daftar_akun"`
-
-	Transaksi []Transaksi `gorm:"foreignKey:Pasien_NIK_Pasien" json:"transaksis,omitempty"`
 }

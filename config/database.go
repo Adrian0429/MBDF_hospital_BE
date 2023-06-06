@@ -40,18 +40,19 @@ func SetUpDatabaseConnection() *gorm.DB {
 	}
 
 	if err := db.AutoMigrate(
+		entities.Diagnosa{},
 		entities.Dokter{},
 		entities.Jenis_Ruangan{},
 		entities.Obat{},
 		entities.Pasien{},
-		entities.Pembelian_Obat{},
+		entities.PembelianObat{},
 		entities.Perawat{},
 		entities.Poli{},
 		entities.Resep{},
 		entities.Ruangan{},
 		entities.Sesi_Dokter{},
 		entities.Sesi_Jaga_Nginap{},
-		entities.Tranksaksi_Reservasi_Diagnosa{},
+		entities.Transaksi_Reservasi_Diagnosa{},
 		entities.Transaksi_Reservasi{},
 		entities.Transaksi{},
 	); err != nil {

@@ -8,6 +8,7 @@ import (
 )
 
 type TransaksiRepository interface {
+	NewTransaksi(ctx context.Context, Transaksi entities.Transaksi) (entities.Transaksi, error)
 	GetAllTransaksi(ctx context.Context) ([]entities.Transaksi, error)
 	GetTransaksiByIDPasien(ctx context.Context, PasienID string) ([]entities.Transaksi, error)
 }
@@ -20,6 +21,13 @@ func NewTransaksiRepository(db *gorm.DB) TransaksiRepository {
 	return &transaksiRepository{
 		connection: db,
 	}
+}
+
+func (tr *transaksiRepository) NewTransaksi(ctx context.Context, transaksi entities.Transaksi) (entities.Transaksi, error) {
+	if err := tr.connection.Create(&transaksi).Error; err != nil {
+		return entities.Transaksi{}, err
+	}
+	return transaksi, nil
 }
 
 func (tr *transaksiRepository) GetAllTransaksi(ctx context.Context) ([]entities.Transaksi, error) {
@@ -39,4 +47,3 @@ func (tr *transaksiRepository) GetTransaksiByIDPasien(ctx context.Context, Pasie
 	}
 	return transaksi, nil
 }
-

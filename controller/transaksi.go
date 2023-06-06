@@ -4,12 +4,14 @@ import (
 	//"github.com/Caknoooo/golang-clean_template/entities"
 	"net/http"
 
+	"github.com/Caknoooo/golang-clean_template/dto"
 	"github.com/Caknoooo/golang-clean_template/services"
 	"github.com/Caknoooo/golang-clean_template/utils"
 	"github.com/gin-gonic/gin"
 )
 
 type TransaksiController interface {
+	NewTransaksi(ctx *gin.Context)
 	GetTransaksiByIDPasien(ctx *gin.Context)
 	GetAllTransaksi(ctx *gin.Context)
 }
@@ -22,6 +24,25 @@ func NewTransaksiController(ts services.TransaksiService) TransaksiController {
 	return &transaksiController{
 		transaksiService: ts,
 	}
+}
+
+func (tc *transaksiController) NewTransaksi(ctx *gin.Context) {
+	var transaksi dto.NewTransaksi
+	if err := ctx.ShouldBind(&transaksi); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	result, err := tc.transaksiService.NewTransaksi(ctx.Request.Context(), transaksi)
+
+	if err != nil {
+		res := utils.BuildResponseFailed("Gagal Menambahkan Transaksi", "Failed", utils.EmptyObj{})
+		ctx.JSON(http.StatusBadRequest, res)
+		return
+	}
+
+	res := utils.BuildResponseSuccess("Berhasil Menambahkan Transaksi", result)
+	ctx.JSON(http.StatusOK, res)
 }
 
 func (tc *transaksiController) GetAllTransaksi(ctx *gin.Context) {
