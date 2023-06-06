@@ -24,3 +24,4 @@ type UserLoginDTO struct {
 	Email    string `json:"email" binding:"email" form:"email"`
 	Password string `json:"password" binding:"required" form:"password"`
 }
+

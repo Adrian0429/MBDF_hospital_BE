@@ -7,7 +7,7 @@ import (
 	"github.com/joho/godotenv"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
-	"github.com/Caknoooo/golang-clean_template/entities"
+	// "github.com/Caknoooo/golang-clean_template/entities"
 )
 
 func SetUpDatabaseConnection() *gorm.DB{
@@ -39,12 +39,12 @@ func SetUpDatabaseConnection() *gorm.DB{
 		panic(err)
 	}
 
-	if err := db.AutoMigrate(
-		entities.User{},
-	); err != nil{
-		fmt.Println(err)
-		panic(err)
-	}
+	// if err := db.AutoMigrate(
+	// 	entities.User{},
+	// ); err != nil{
+	// 	fmt.Println(err)
+	// 	panic(err)
+	// }
 
 	fmt.Println("Database Connected")
 	return db

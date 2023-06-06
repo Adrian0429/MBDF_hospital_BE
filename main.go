@@ -14,18 +14,34 @@ import (
 	"gorm.io/gorm"
 )
 
-func main() {	
+func main() {
 	var (
 		db             *gorm.DB                  = config.SetUpDatabaseConnection()
 		jwtService     services.JWTService       = services.NewJWTService()
 		userRepository repository.UserRepository = repository.NewUserRepository(db)
 		userService    services.UserService      = services.NewUserService(userRepository)
 		userController controller.UserController = controller.NewUserController(userService, jwtService)
+
+		pasienRepository repository.PasienRepository = repository.NewPasienRepository(db)
+		pasienService    services.PasienService      = services.NewPasienService(pasienRepository)
+		pasienController controller.PasienController = controller.NewPasienController(pasienService)
+
+		dokterRepository repository.DokterRepository = repository.NewDokterRepository(db)
+		dokterService    services.DokterService      = services.NewDokterService(dokterRepository)
+		dokterController controller.DokterController = controller.NewDokterController(dokterService)
+
+		transaksiRepository repository.TransaksiRepository = repository.NewTransaksiRepository(db)
+		transaksiService    services.TransaksiService      = services.NewTransaksiService(transaksiRepository)
+		transaksiController controller.TransaksiController = controller.NewTransaksiController(transaksiService)
+
+		ruanganRepository repository.RuanganRepository = repository.NewRuanganRepository(db)
+		ruanganService    services.RuanganService      = services.NewRuanganService(ruanganRepository)
+		ruanganController controller.RuanganController = controller.NewRuanganController(ruanganService)
 	)
 
 	server := gin.Default()
 	server.Use(middleware.CORSMiddleware())
-	routes.Router(server, userController, jwtService)
+	routes.Router(server, userController, jwtService, pasienController, dokterController, transaksiController, ruanganController)
 
 	port := os.Getenv("PORT")
 	if port == "" {

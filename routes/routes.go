@@ -7,14 +7,38 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func Router(route *gin.Engine, UserController controller.UserController, jwtService services.JWTService) {
+func Router(route *gin.Engine, userController controller.UserController, jwtService services.JWTService, pasienController controller.PasienController, dokterController controller.DokterController, transaksiController controller.TransaksiController, ruanganController controller.RuanganController) {
 	routes := route.Group("/api/user")
 	{
-		routes.POST("", UserController.RegisterUser)
-		routes.GET("", middleware.Authenticate(jwtService), UserController.GetAllUser)
-		routes.POST("/login", UserController.LoginUser)
-		routes.DELETE("/", middleware.Authenticate(jwtService), UserController.DeleteUser)
-		routes.PUT("/", middleware.Authenticate(jwtService), UserController.UpdateUser)
-		routes.GET("/me", middleware.Authenticate(jwtService), UserController.MeUser)
+		routes.POST("", userController.RegisterUser)
+		routes.GET("", middleware.Authenticate(jwtService), userController.GetAllUser)
+		routes.POST("/login", userController.LoginUser)
+		routes.DELETE("/", middleware.Authenticate(jwtService), userController.DeleteUser)
+		routes.PUT("/", middleware.Authenticate(jwtService), userController.UpdateUser)
+		routes.GET("/me", middleware.Authenticate(jwtService), userController.MeUser)
 	}
+
+	pasienRoutes := route.Group("/api/pasien")
+	{
+		pasienRoutes.GET("", pasienController.GetAllPasien)
+		// Add other pasien routes here if needed
+	}
+
+	dokterRoutes := route.Group("/api/dokter")
+	{
+		dokterRoutes.GET("", dokterController.GetAllDokter)
+		dokterRoutes.GET("/:id", dokterController.GetDokterByID)
+	}
+
+	transaksiRoutes := route.Group("/api/transaksi")
+	{
+		transaksiRoutes.GET("/:id", transaksiController.GetTransaksiByIDPasien)
+		transaksiRoutes.GET("/all", transaksiController.GetAllTransaksi)
+	}
+
+	ruanganRoutes := route.Group("/api/ruangan")
+	{
+		ruanganRoutes.GET("", ruanganController.GetAllRuangan)
+	}
+
 }
