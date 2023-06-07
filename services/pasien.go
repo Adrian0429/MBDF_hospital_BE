@@ -11,7 +11,7 @@ import (
 
 type PasienService interface {
 	RegisterPasien(ctx context.Context, pasienDTO dto.PasienCreateDTO) (entities.Pasien, error)
-	GetAllPasien(ctx context.Context) ([]entities.Pasien, error)
+	GetAllPasien(ctx context.Context) ([]entities.Pasien, int, error)
 	GetPasienByID(ctx context.Context, PasienID string) (entities.Pasien, error)
 }
 
@@ -34,12 +34,8 @@ func (ps *pasienService) RegisterPasien(ctx context.Context, pasienDTO dto.Pasie
 	return ps.pasienRepo.RegisterPasien(ctx, pasien)
 }
 
-func (ps *pasienService) GetAllPasien(ctx context.Context) ([]entities.Pasien, error) {
-	pasien, err := ps.pasienRepo.GetAllPasien(ctx)
-	if err != nil {
-		return nil, err
-	}
-	return pasien, nil
+func (ps *pasienService) GetAllPasien(ctx context.Context) ([]entities.Pasien, int, error) {
+	return ps.pasienRepo.GetAllPasien(ctx)
 }
 
 func (ps *pasienService) GetPasienByID(ctx context.Context, PasienID string) (entities.Pasien, error) {

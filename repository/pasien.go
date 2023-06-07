@@ -9,7 +9,7 @@ import (
 
 type PasienRepository interface {
 	RegisterPasien(ctx context.Context, pasien entities.Pasien) (entities.Pasien, error)
-	GetAllPasien(ctx context.Context) ([]entities.Pasien, error)
+	GetAllPasien(ctx context.Context) ([]entities.Pasien, int, error)
 	GetPasienByID(ctx context.Context, PasienID string) (entities.Pasien, error)
 }
 
@@ -29,12 +29,15 @@ func (pr *pasienRepository) RegisterPasien(ctx context.Context, pasien entities.
 	}
 	return pasien, nil
 }
-func (pr *pasienRepository) GetAllPasien(ctx context.Context) ([]entities.Pasien, error) {
+
+func (pr *pasienRepository) GetAllPasien(ctx context.Context) ([]entities.Pasien, int, error) {
 	var pasien []entities.Pasien
-	if err := pr.connection.Table("pasiens").Find(&pasien).Error; err != nil {
-		return nil, err
+	var count int64
+
+	if err := pr.connection.Table("pasiens").Find(&pasien).Count(&count).Error; err != nil {
+		return nil, 0, err
 	}
-	return pasien, nil
+	return pasien, int(count), nil
 }
 
 func (pr *pasienRepository) GetPasienByID(ctx context.Context, PasienID string) (entities.Pasien, error) {

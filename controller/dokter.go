@@ -2,6 +2,7 @@ package controller
 
 import (
 	"net/http"
+	"strings"
 
 	//"github.com/Caknoooo/golang-clean_template/entities"
 	"github.com/Caknoooo/golang-clean_template/dto"
@@ -51,7 +52,40 @@ func (dc *dokterController) GetAllDokter(ctx *gin.Context) {
 		return
 	}
 
-	ctx.JSON(http.StatusOK, dokter)
+	dtoList := make([]dto.AllDokterDTO, 0, len(dokter))
+	for _, dokterItem := range dokter {
+		dtoItem := dto.AllDokterDTO{
+			Nama_Dokter:      dokterItem.Nama_Dokter,
+			Jenis_Kelamin:    dokterItem.Jenis_Kelamin,
+			Tanggal_Lahir:    dokterItem.Tanggal_Lahir,
+			No_Telepon:       dokterItem.No_Telepon,
+			Harga_Konsultasi: dokterItem.Harga_Konsultasi,
+			Poli_Kode_Poli:   mapKodePoli(dokterItem.Poli_Kode_Poli),
+		}
+		dtoList = append(dtoList, dtoItem)
+	}
+
+	ctx.JSON(http.StatusOK, dtoList)
+}
+
+func mapKodePoli(kodePoli string) string {
+
+	trimkode := strings.TrimSpace(kodePoli)
+
+	switch trimkode {
+	case "PD":
+		return "Penyakit Dalam"
+	case "O":
+		return "Obstetri dan Ginekologi"
+	case "IA":
+		return "Ibu dan Anak"
+	case "M":
+		return "Mata"
+	case "S":
+		return "Saraf"
+	default:
+		return "unknown"
+	}
 }
 
 func (dc *dokterController) GetDokterByID(ctx *gin.Context) {

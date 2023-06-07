@@ -10,3 +10,12 @@ type PasienCreateDTO struct {
 	Password            string `gorm:"type:varchar(100)" json:"password"`
 	Tanggal_Daftar_Akun string `gorm:"type:date" json:"tanggal_daftar_akun"`
 }
+
+type GetAllPasienDTO struct {
+	Count         int    `json:"count"`
+	NIK_pasien    string `json:"nik_pasien"`
+	Nama_Pasien   string `json:"nama"`
+	Jenis_Kelamin string `json:"jenis_kelamin"`
+	Tanggal_Lahir string `json:"tanggal_lahir"`
+	No_Telepon    string `json:"no_telepon"`
+}

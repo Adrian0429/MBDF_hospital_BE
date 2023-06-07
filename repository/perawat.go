@@ -29,6 +29,7 @@ func (dr *perawatRepository) RegisterPerawat(ctx context.Context, perawat entiti
 	}
 	return perawat, nil
 }
+
 func (dr *perawatRepository) GetAllPerawat(ctx context.Context) ([]entities.Perawat, error) {
 	var perawat []entities.Perawat
 	if err := dr.connection.Table("perawats").Find(&perawat).Error; err != nil {
