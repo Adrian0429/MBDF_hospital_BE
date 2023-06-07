@@ -10,13 +10,10 @@ type Dokter struct {
 	Jenis_Kelamin    string `gorm:"type:char(1);not null" json:"jenis_kelamin"`
 	Tanggal_Lahir    string `gorm:"type:date;not null" json:"tanggal_lahir"`
 	No_Telepon       string `gorm:"type:varchar(15);not null" json:"no_telepon"`
-	Email            string `gorm:"type:varchar(100)" json:"email"`
-	Password         string `gorm:"type:varchar(100)" json:"password"`
 	Harga_Konsultasi string `gorm:"type:money" json:"harga_Konsul"`
+	Poli_Kode_Poli   string `gorm:"type:char(4);not null" json:"poli_kode_poli"`
 
-	Poli_Kode_Poli string `gorm:"type:char(4);not null" json:"poli_kode_poli"`
-	Poli           Poli   `gorm:"foreignKey:Poli_Kode_Poli" json:"poli"`
-
+	Poli        Poli          `gorm:"foreignKey:Poli_Kode_Poli" json:"poli"`
 	Sesi_Dokter []Sesi_Dokter `gorm:"foreignKey:Dokter_ID_Dokter" json:"sesi_dokter"`
 }
 

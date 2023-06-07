@@ -55,6 +55,7 @@ func SetUpDatabaseConnection() *gorm.DB {
 		entities.Transaksi_Reservasi_Diagnosa{},
 		entities.Transaksi_Reservasi{},
 		entities.Transaksi{},
+			
 	); err != nil {
 		fmt.Println(err)
 		panic(err)
