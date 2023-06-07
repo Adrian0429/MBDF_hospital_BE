@@ -23,10 +23,8 @@ func NewRuanganRepository(db *gorm.DB) RuanganRepository {
 
 func (rr *ruanganRepository) GetAllRuangan(ctx context.Context) ([]entities.Ruangan, error) {
 	var ruangan []entities.Ruangan
-	if err := rr.connection.Table("ruangan").Find(&ruangan).Error; err != nil {
+	if err := rr.connection.Table("ruangans").Find(&ruangan).Error; err != nil {
 		return nil, err
 	}
 	return ruangan, nil
 }
-
-

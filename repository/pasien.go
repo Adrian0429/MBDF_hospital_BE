@@ -24,7 +24,7 @@ func NewPasienRepository(db *gorm.DB) PasienRepository {
 }
 
 func (pr *pasienRepository) RegisterPasien(ctx context.Context, pasien entities.Pasien) (entities.Pasien, error) {
-	if err := pr.connection.Create(&pasien).Error; err != nil {
+	if err := pr.connection.Table("pasiens").Create(&pasien).Error; err != nil {
 		return entities.Pasien{}, err
 	}
 	return pasien, nil
@@ -40,7 +40,7 @@ func (pr *pasienRepository) GetAllPasien(ctx context.Context) ([]entities.Pasien
 func (pr *pasienRepository) GetPasienByID(ctx context.Context, PasienID string) (entities.Pasien, error) {
 	var pasien entities.Pasien
 
-	if err := pr.connection.Where("id = ?", PasienID).Take(&pasien).Error; err != nil {
+	if err := pr.connection.Table("pasiens").Where("id = ?", PasienID).Take(&pasien).Error; err != nil {
 		return entities.Pasien{}, err
 	}
 	return pasien, nil
