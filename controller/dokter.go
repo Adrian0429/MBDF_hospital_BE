@@ -35,12 +35,12 @@ func (dc *dokterController) RegisterDokter(ctx *gin.Context) {
 	result, err := dc.dokterService.RegisterDokter(ctx.Request.Context(), dokter)
 
 	if err != nil {
-		res := utils.BuildResponseFailed("Gagal Menambahkan Pasien", "Failed", utils.EmptyObj{})
+		res := utils.BuildResponseFailed("Gagal Menambahkan Dokter", "Failed", utils.EmptyObj{})
 		ctx.JSON(http.StatusBadRequest, res)
 		return
 	}
 
-	res := utils.BuildResponseSuccess("Berhasil Menambahkan dokter", result)
+	res := utils.BuildResponseSuccess("Berhasil Menambahkan Dokter", result)
 	ctx.JSON(http.StatusOK, res)
 }
 

@@ -37,11 +37,15 @@ func main() {
 		ruanganRepository repository.RuanganRepository = repository.NewRuanganRepository(db)
 		ruanganService    services.RuanganService      = services.NewRuanganService(ruanganRepository)
 		ruanganController controller.RuanganController = controller.NewRuanganController(ruanganService)
+
+		perawatRepository repository.PerawatRepository = repository.NewPerawatRepository(db)
+		perawatService    services.PerawatService      = services.NewPerawatService(perawatRepository)
+		perawatController controller.PerawatController = controller.NewPerawatController(perawatService)
 	)
 
 	server := gin.Default()
 	server.Use(middleware.CORSMiddleware())
-	routes.Router(server, userController, jwtService, pasienController, dokterController, transaksiController, ruanganController)
+	routes.Router(server, userController, jwtService, pasienController, dokterController, transaksiController, ruanganController, perawatController)
 
 	port := os.Getenv("PORT")
 	if port == "" {

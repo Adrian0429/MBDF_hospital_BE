@@ -7,7 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func Router(route *gin.Engine, userController controller.UserController, jwtService services.JWTService, pasienController controller.PasienController, dokterController controller.DokterController, transaksiController controller.TransaksiController, ruanganController controller.RuanganController) {
+func Router(route *gin.Engine, userController controller.UserController, jwtService services.JWTService, pasienController controller.PasienController, dokterController controller.DokterController, transaksiController controller.TransaksiController, ruanganController controller.RuanganController, perawatController controller.PerawatController) {
 	routes := route.Group("/api/user")
 	{
 		routes.POST("", userController.RegisterUser)
@@ -43,6 +43,13 @@ func Router(route *gin.Engine, userController controller.UserController, jwtServ
 	{
 
 		ruanganRoutes.GET("", ruanganController.GetAllRuangan)
+	}
+
+	perawatRoutes := route.Group("/api/perawat")
+	{
+		perawatRoutes.POST("/new", perawatController.RegisterPerawat)
+		perawatRoutes.GET("", perawatController.GetAllPerawat)
+		perawatRoutes.GET("/:id", perawatController.GetPerawatByID)
 	}
 
 }
