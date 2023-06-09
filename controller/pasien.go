@@ -21,6 +21,7 @@ type PasienController interface {
 	UpdatePasien(ctx *gin.Context)
 	DeletePasien(ctx *gin.Context)
 	GetLatestPembelianObat(ctx *gin.Context)
+	GetLatestReservation(ctx *gin.Context)
 }
 
 type pasienController struct {
@@ -181,4 +182,15 @@ func (c *pasienController) GetLatestPembelianObat(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusOK, pembelianObat)
+}
+
+func (pc *pasienController) GetLatestReservation(ctx *gin.Context) {
+	nik := ctx.Param("nik")
+	reservasi, err := pc.pasienService.GetLatestReservation(ctx.Request.Context(), nik)
+	if err != nil {
+		ctx.JSON(http.StatusNotFound, gin.H{"error": "reservasi not found"})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, reservasi)
 }

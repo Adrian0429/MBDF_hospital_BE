@@ -16,7 +16,7 @@ type PasienRepository interface {
 	GetPasienByEmail(ctx context.Context, Email string) (entities.Pasien, error)
 	UpdatePasien(ctx context.Context, pasien entities.Pasien) error
 	DeletePasien(ctx context.Context, UserID uuid.UUID) error
-	GetLatestReservasion(ctx context.Context, NIK string) ([]dto.AmbilTransaksiTerbaru, error)
+	GetLatestReservation(ctx context.Context, NIK string) ([]dto.AmbilTransaksiTerbaru, error)
 }
 
 type pasienRepository struct {

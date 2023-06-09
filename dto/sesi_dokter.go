@@ -23,7 +23,7 @@ type AmbilSesiDTO struct {
 
 type AmbilTransaksiTerbaru struct {
 	Tanggal_Reservasi string `gorm:"type:date;not null" json:"Tanggal_reservasi"`
-	Nama_Dokter      string `gorm:"type:varchar(50);not null" json:"nama_dokter"`
-	Nama_Diagnosa       string                 `gorm:"type:varchar(50);primaryKey;not null" json:"nik_pasien"`
+	Nama_Dokter      string `gorm:"type:varchar(50);not null" json:"Nama_dokter"`
+	Diagnosa_Nama_Diagnosa       string                 `gorm:"type:varchar(50);primaryKey;not null" json:"Nama_diagnosa"`
 	Nama_Ruangan        string                `gorm:"type:varchar(40);not null" json:"Nama_Ruangan"`
 }

@@ -20,6 +20,8 @@ type PasienService interface {
 	CheckPasien(ctx context.Context, email string) (bool, error)
 	Verify(ctx context.Context, email string, password string) (bool, error)
 	GetLatestPembelianObat(ctx context.Context, PasienID string) ([]dto.LatestPembelianObatDTO, error)
+	GetLatestReservation(ctx context.Context, NIK string) ([]dto.AmbilTransaksiTerbaru, error)
+
 }
 
 type pasienService struct {
@@ -102,4 +104,8 @@ func (ps *pasienService) Verify(ctx context.Context, email string, password stri
 
 func (s *pasienService) GetLatestPembelianObat(ctx context.Context, pasienID string) ([]dto.LatestPembelianObatDTO, error) {
 	return s.pasienRepo.GetLatestPembelianObat(ctx, pasienID)
+}
+
+func (ps *pasienService) GetLatestReservation(ctx context.Context, NIK string) ([]dto.AmbilTransaksiTerbaru, error) {
+	return ps.pasienRepo.GetLatestReservation(ctx, NIK)
 }

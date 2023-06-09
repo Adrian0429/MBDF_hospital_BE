@@ -66,3 +66,4 @@ func (tc *transaksiController) GetTransaksiByIDPasien(ctx *gin.Context) {
 
 	ctx.JSON(http.StatusOK, transaksi)
 }
+
