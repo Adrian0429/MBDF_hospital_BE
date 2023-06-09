@@ -16,7 +16,7 @@ type PasienRepository interface {
 	GetPasienByEmail(ctx context.Context, Email string) (entities.Pasien, error)
 	UpdatePasien(ctx context.Context, pasien entities.Pasien) error
 	DeletePasien(ctx context.Context, UserID uuid.UUID) error
-	GetLatestPembelianObat(ctx context.Context, PasienID string) ([]dto.LatestPembelianObatDTO, error)
+	GetLatestReservasion(ctx context.Context, NIK string) ([]dto.AmbilTransaksiTerbaru, error)
 }
 
 type pasienRepository struct {
@@ -95,4 +95,14 @@ func (pr *pasienRepository) GetLatestPembelianObat(ctx context.Context, PasienID
 	}
 
 	return Pembelian, nil
+}
+
+func (sdr *pasienRepository) GetLatestReservasion(ctx context.Context, NIK string) ([]dto.AmbilTransaksiTerbaru, error) {
+	var reservasiTerbaru []dto.AmbilTransaksiTerbaru
+	query := "SELECT Tanggal_Reservasi, Nama_Dokter, Diagnosa_Nama_Diagnosa, Nama_Ruangan FROM Pasiens JOIN Transaksis ON NIK_Pasien = Pasien_NIK_Pasien JOIN Transaksi_Reservasis ON ID_Transaksi = Transaksi_ID_Transaksi JOIN Transaksi_Reservasi_Diagnosas ON ID_Medical_Record = Transaksi_Reservasi_ID_Medical_Record JOIN Ruangans ON Ruangan_ID_Ruangan = ID_Ruangan JOIN Sesi_Dokters ON Sesi_Dokter_ID = ID_Sesi JOIN Dokters on Dokter_ID_Dokter = ID_Dokter WHERE NIK_Pasien = ?;"
+	// query := "select * from Jadwal_Dokter"
+	if err := sdr.connection.Raw(query, NIK).Find(&reservasiTerbaru).Error; err != nil {
+		return nil, err
+	}
+	return reservasiTerbaru, nil
 }
