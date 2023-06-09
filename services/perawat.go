@@ -13,6 +13,7 @@ type PerawatService interface {
 	RegisterPerawat(ctx context.Context, perawatDTO dto.PerawatCreateDTO) (entities.Perawat, error)
 	GetAllPerawat(ctx context.Context) ([]entities.Perawat, error)
 	GetPerawatByID(ctx context.Context, PerawatID string) (entities.Perawat, error)
+	GetJadwalPerawat(ctx context.Context) ([]dto.JadwalPerawatDTO, error)
 }
 
 type perawatService struct {
@@ -35,6 +36,10 @@ func (ds *perawatService) RegisterPerawat(ctx context.Context, perawatDTO dto.Pe
 }
 func (ds *perawatService) GetAllPerawat(ctx context.Context) ([]entities.Perawat, error) {
 	return ds.perawatRepository.GetAllPerawat(ctx)
+}
+
+func (ds *perawatService) GetJadwalPerawat(ctx context.Context) ([]dto.JadwalPerawatDTO, error) {
+	return ds.perawatRepository.GetJadwalPerawat(ctx)
 }
 
 func (ds *perawatService) GetPerawatByID(ctx context.Context, PerawatID string) (entities.Perawat, error) {

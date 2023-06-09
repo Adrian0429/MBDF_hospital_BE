@@ -40,6 +40,7 @@ func SetUpDatabaseConnection() *gorm.DB {
 	}
 
 	if err := db.AutoMigrate(
+		entities.User{},
 		entities.Diagnosa{},
 		entities.Dokter{},
 		entities.Jenis_Ruangan{},
@@ -55,7 +56,6 @@ func SetUpDatabaseConnection() *gorm.DB {
 		entities.Transaksi_Reservasi_Diagnosa{},
 		entities.Transaksi_Reservasi{},
 		entities.Transaksi{},
-			
 	); err != nil {
 		fmt.Println(err)
 		panic(err)

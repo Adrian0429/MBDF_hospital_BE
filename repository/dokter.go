@@ -11,6 +11,7 @@ type DokterRepository interface {
 	RegisterDokter(ctx context.Context, dokter entities.Dokter) (entities.Dokter, error)
 	GetAllDokter(ctx context.Context) ([]entities.Dokter, error)
 	GetDokterByID(ctx context.Context, DokterID string) (entities.Dokter, error)
+	UpdateDoctor(ctx context.Context, dokter entities.Dokter) error
 }
 
 type dokterRepository struct {
@@ -29,12 +30,20 @@ func (dr *dokterRepository) RegisterDokter(ctx context.Context, dokter entities.
 	}
 	return dokter, nil
 }
+
 func (dr *dokterRepository) GetAllDokter(ctx context.Context) ([]entities.Dokter, error) {
 	var dokter []entities.Dokter
 	if err := dr.connection.Table("dokters").Find(&dokter).Error; err != nil {
 		return nil, err
 	}
 	return dokter, nil
+}
+
+func (dr *dokterRepository) UpdateDoctor(ctx context.Context, dokter entities.Dokter) error {
+	if err := dr.connection.Updates(&dokter).Error; err != nil {
+		return err
+	}
+	return nil
 }
 
 func (dr *dokterRepository) GetDokterByID(ctx context.Context, DokterID string) (entities.Dokter, error) {

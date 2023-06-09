@@ -14,6 +14,7 @@ type PerawatController interface {
 	RegisterPerawat(ctx *gin.Context)
 	GetAllPerawat(ctx *gin.Context)
 	GetPerawatByID(ctx *gin.Context)
+	GetJadwalPerawat(ctx *gin.Context)
 }
 
 type perawatController struct {
@@ -52,6 +53,16 @@ func (dc *perawatController) GetAllPerawat(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusOK, perawat)
+}
+
+func (dc *perawatController) GetJadwalPerawat(ctx *gin.Context) {
+	jadwal_perawat, err := dc.perawatService.GetJadwalPerawat(ctx.Request.Context())
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, jadwal_perawat)
 }
 
 func (dc *perawatController) GetPerawatByID(ctx *gin.Context) {

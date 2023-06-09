@@ -7,7 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func Router(route *gin.Engine, userController controller.UserController, jwtService services.JWTService, pasienController controller.PasienController, dokterController controller.DokterController, transaksiController controller.TransaksiController, ruanganController controller.RuanganController, perawatController controller.PerawatController, obatController controller.ObatController) {
+func Router(route *gin.Engine, userController controller.UserController, jwtService services.JWTService, pasienController controller.PasienController, dokterController controller.DokterController, transaksiController controller.TransaksiController, ruanganController controller.RuanganController, perawatController controller.PerawatController, obatController controller.ObatController, sesidokterController controller.SesiDokterController) {
 	routes := route.Group("/api/user")
 	{
 		routes.POST("", userController.RegisterUser)
@@ -30,6 +30,7 @@ func Router(route *gin.Engine, userController controller.UserController, jwtServ
 		dokterRoutes.POST("/new", dokterController.RegisterDokter)
 		dokterRoutes.GET("", dokterController.GetAllDokter)
 		dokterRoutes.GET("/:id", dokterController.GetDokterByID)
+		dokterRoutes.PUT("/edit", dokterController.UpdateDoctor)
 	}
 
 	transaksiRoutes := route.Group("/api/transaksi")
@@ -50,6 +51,7 @@ func Router(route *gin.Engine, userController controller.UserController, jwtServ
 		perawatRoutes.POST("/new", perawatController.RegisterPerawat)
 		perawatRoutes.GET("", perawatController.GetAllPerawat)
 		perawatRoutes.GET("/:id", perawatController.GetPerawatByID)
+		perawatRoutes.GET("/jadwal", perawatController.GetJadwalPerawat)
 	}
 
 	obatRoutes := route.Group("/api/obat")
@@ -59,4 +61,10 @@ func Router(route *gin.Engine, userController controller.UserController, jwtServ
 		obatRoutes.GET("/:id", obatController.GetObatByID)
 	}
 
+	sesiDokterRoutes := route.Group("/api/sesi_dokter")
+	{
+		sesiDokterRoutes.POST("/new", sesidokterController.RegisterSesiDokter)
+		sesiDokterRoutes.GET("", sesidokterController.GetAllSesiDokter)
+		sesiDokterRoutes.GET("/:id", sesidokterController.GetSesiDokterByID)
+	}
 }

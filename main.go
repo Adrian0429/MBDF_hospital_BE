@@ -9,7 +9,7 @@ import (
 	"github.com/Caknoooo/golang-clean_template/repository"
 	"github.com/Caknoooo/golang-clean_template/routes"
 	"github.com/Caknoooo/golang-clean_template/services"
-
+	
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 )
@@ -24,7 +24,7 @@ func main() {
 
 		pasienRepository repository.PasienRepository = repository.NewPasienRepository(db)
 		pasienService    services.PasienService      = services.NewPasienService(pasienRepository)
-		pasienController controller.PasienController = controller.NewPasienController(pasienService)
+		pasienController controller.PasienController = controller.NewPasienController(pasienService, jwtService)
 
 		dokterRepository repository.DokterRepository = repository.NewDokterRepository(db)
 		dokterService    services.DokterService      = services.NewDokterService(dokterRepository)
@@ -45,11 +45,15 @@ func main() {
 		obatRepository repository.ObatRepository = repository.NewObatRepository(db)
 		obatService    services.ObatService      = services.NewObatService(obatRepository)
 		obatController controller.ObatController = controller.NewObatController(obatService)
+
+		sesidokterRepository repository.SesiDokterRepository = repository.NewSesiDokterRepository(db)
+		sesidokterService    services.SesiDokterService      = services.NewSesiDokterService(sesidokterRepository)
+		sesidokterController controller.SesiDokterController = controller.NewSesiDokterController(sesidokterService)
 	)
 
 	server := gin.Default()
 	server.Use(middleware.CORSMiddleware())
-	routes.Router(server, userController, jwtService, pasienController, dokterController, transaksiController, ruanganController, perawatController, obatController)
+	routes.Router(server, userController, jwtService, pasienController, dokterController, transaksiController, ruanganController, perawatController, obatController, sesidokterController)
 
 	port := os.Getenv("PORT")
 	if port == "" {

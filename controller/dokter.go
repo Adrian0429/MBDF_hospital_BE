@@ -15,6 +15,7 @@ type DokterController interface {
 	RegisterDokter(ctx *gin.Context)
 	GetAllDokter(ctx *gin.Context)
 	GetDokterByID(ctx *gin.Context)
+	UpdateDoctor(ctx *gin.Context)
 }
 
 type dokterController struct {
@@ -96,4 +97,28 @@ func (dc *dokterController) GetDokterByID(ctx *gin.Context) {
 		return
 	}
 	ctx.JSON(http.StatusOK, doctor)
+}
+
+func (dc *dokterController) UpdateDoctor(ctx *gin.Context) {
+	var DokterDTO dto.UpdateDokterDTO
+	if err := ctx.ShouldBind(&DokterDTO); err != nil {
+		res := utils.BuildResponseFailed("Gagal Mendapatkan Request Dari Body", err.Error(), utils.EmptyObj{})
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, res)
+		return
+	}
+
+	// Get the user ID from the map key
+	dokterID := ctx.PostForm("ID_Dokter") // Assuming the user ID is sent as a form value
+
+	// Set the user ID in the DTO
+	DokterDTO.ID_Dokter = dokterID
+
+	if err := dc.dokterService.UpdateDoctor(ctx.Request.Context(), DokterDTO); err != nil {
+		res := utils.BuildResponseFailed("Gagal Update dokter", err.Error(), utils.EmptyObj{})
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, res)
+		return
+	}
+
+	res := utils.BuildResponseSuccess("Berhasil Update dokter", DokterDTO)
+	ctx.JSON(http.StatusOK, res)
 }

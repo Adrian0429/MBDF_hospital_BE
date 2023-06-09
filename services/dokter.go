@@ -13,6 +13,7 @@ type DokterService interface {
 	RegisterDokter(ctx context.Context, dokterDTO dto.DokterCreateDTO) (entities.Dokter, error)
 	GetAllDokter(ctx context.Context) ([]entities.Dokter, error)
 	GetDokterByID(ctx context.Context, DokterID string) (entities.Dokter, error)
+	UpdateDoctor(ctx context.Context, DokterDTO dto.UpdateDokterDTO) error
 }
 
 type dokterService struct {
@@ -33,8 +34,17 @@ func (ds *dokterService) RegisterDokter(ctx context.Context, dokterDTO dto.Dokte
 	}
 	return ds.dokterRepository.RegisterDokter(ctx, dokter)
 }
+
 func (ds *dokterService) GetAllDokter(ctx context.Context) ([]entities.Dokter, error) {
 	return ds.dokterRepository.GetAllDokter(ctx)
+}
+
+func (ds *dokterService) UpdateDoctor(ctx context.Context, DokterDTO dto.UpdateDokterDTO) error {
+	dokter := entities.Dokter{}
+	if err := smapping.FillStruct(&dokter, smapping.MapFields(DokterDTO)); err != nil {
+		return nil
+	}
+	return ds.dokterRepository.UpdateDoctor(ctx, dokter)
 }
 
 func (ds *dokterService) GetDokterByID(ctx context.Context, DokterID string) (entities.Dokter, error) {
