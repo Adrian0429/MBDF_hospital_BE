@@ -16,6 +16,7 @@ type PasienRepository interface {
 	GetPasienByEmail(ctx context.Context, Email string) (entities.Pasien, error)
 	UpdatePasien(ctx context.Context, pasien entities.Pasien) error
 	DeletePasien(ctx context.Context, UserID uuid.UUID) error
+	GetLatestPembelianObat(ctx context.Context, PasienID string)([]dto.LatestPembelianObatDTO, error)
 	GetLatestReservation(ctx context.Context, NIK string) ([]dto.AmbilTransaksiTerbaru, error)
 }
 
@@ -81,7 +82,6 @@ func (pr *pasienRepository) DeletePasien(ctx context.Context, userID uuid.UUID) 
 
 func (pr *pasienRepository) GetLatestPembelianObat(ctx context.Context, PasienID string) ([]dto.LatestPembelianObatDTO, error) {
 	var Pembelian []dto.LatestPembelianObatDTO
-
 	query := `
 		SELECT transaksis.Tanggal, obats.Nama_Obat, pembelian_obats.Jumlah_Obat
 		FROM transaksis
@@ -97,7 +97,7 @@ func (pr *pasienRepository) GetLatestPembelianObat(ctx context.Context, PasienID
 	return Pembelian, nil
 }
 
-func (sdr *pasienRepository) GetLatestReservasion(ctx context.Context, NIK string) ([]dto.AmbilTransaksiTerbaru, error) {
+func (sdr *pasienRepository) GetLatestReservation(ctx context.Context, NIK string) ([]dto.AmbilTransaksiTerbaru, error) {
 	var reservasiTerbaru []dto.AmbilTransaksiTerbaru
 	query := "SELECT Tanggal_Reservasi, Nama_Dokter, Diagnosa_Nama_Diagnosa, Nama_Ruangan FROM Pasiens JOIN Transaksis ON NIK_Pasien = Pasien_NIK_Pasien JOIN Transaksi_Reservasis ON ID_Transaksi = Transaksi_ID_Transaksi JOIN Transaksi_Reservasi_Diagnosas ON ID_Medical_Record = Transaksi_Reservasi_ID_Medical_Record JOIN Ruangans ON Ruangan_ID_Ruangan = ID_Ruangan JOIN Sesi_Dokters ON Sesi_Dokter_ID = ID_Sesi JOIN Dokters on Dokter_ID_Dokter = ID_Dokter WHERE NIK_Pasien = ?;"
 	// query := "select * from Jadwal_Dokter"
