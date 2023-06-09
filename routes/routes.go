@@ -8,7 +8,7 @@ import (
 )
 
 func Router(route *gin.Engine, userController controller.UserController, jwtService services.JWTService, pasienController controller.PasienController, dokterController controller.DokterController, transaksiController controller.TransaksiController, ruanganController controller.RuanganController, perawatController controller.PerawatController, obatController controller.ObatController, sesidokterController controller.SesiDokterController) {
-	routes := route.Group("/api/admin")
+	routes := route.Group("/api/user")
 	{
 		routes.POST("", userController.RegisterUser)
 		routes.GET("", middleware.Authenticate(jwtService), userController.GetAllUser)
@@ -29,46 +29,51 @@ func Router(route *gin.Engine, userController controller.UserController, jwtServ
 		// Add other pasien routes here if needed
 	}
 
-	dokterRoutes := route.Group("/api/dokter")
+	adminRoutes := route.Group("/api/admin")
+	adminRoutes.Use(middleware.Authenticate(jwtService))
 	{
-		dokterRoutes.POST("/new", dokterController.RegisterDokter)
-		dokterRoutes.GET("", dokterController.GetAllDokter)
-		dokterRoutes.GET("/:id", dokterController.GetDokterByID)
-		dokterRoutes.PUT("/edit", dokterController.UpdateDoctor)
+		dokterRoutes := adminRoutes.Group("/dokter")
+		{
+			dokterRoutes.POST("/new", dokterController.RegisterDokter)
+			dokterRoutes.GET("", dokterController.GetAllDokter)
+			dokterRoutes.GET("/:id", dokterController.GetDokterByID)
+			dokterRoutes.PUT("/edit", dokterController.UpdateDoctor)
+		}
+
+		transaksiRoutes := adminRoutes.Group("/transaksi")
+		{
+			transaksiRoutes.POST("/new", transaksiController.NewTransaksi)
+			transaksiRoutes.GET("/:id", transaksiController.GetTransaksiByIDPasien)
+			transaksiRoutes.GET("/all", transaksiController.GetAllTransaksi)
+		}
+
+		ruanganRoutes := adminRoutes.Group("/ruangan")
+		{
+
+			ruanganRoutes.GET("", ruanganController.GetAllRuangan)
+		}
+
+		perawatRoutes := adminRoutes.Group("/perawat")
+		{
+			perawatRoutes.POST("/new", perawatController.RegisterPerawat)
+			perawatRoutes.GET("", perawatController.GetAllPerawat)
+			perawatRoutes.GET("/:id", perawatController.GetPerawatByID)
+			perawatRoutes.GET("/jadwal", perawatController.GetJadwalPerawat)
+		}
+
+		obatRoutes := adminRoutes.Group("/obat")
+		{
+			obatRoutes.POST("/new", obatController.RegisterObat)
+			obatRoutes.GET("", obatController.GetAllObat)
+			obatRoutes.GET("/:id", obatController.GetObatByID)
+		}
+
+		sesiDokterRoutes := adminRoutes.Group("/sesi_dokter")
+		{
+			sesiDokterRoutes.POST("/new", sesidokterController.RegisterSesiDokter)
+			sesiDokterRoutes.GET("", sesidokterController.GetAllSesiDokter)
+			sesiDokterRoutes.GET("/:id", sesidokterController.GetSesiDokterByID)
+		}
 	}
 
-	transaksiRoutes := route.Group("/api/transaksi")
-	{
-		transaksiRoutes.POST("/new", transaksiController.NewTransaksi)
-		transaksiRoutes.GET("/:id", transaksiController.GetTransaksiByIDPasien)
-		transaksiRoutes.GET("/all", transaksiController.GetAllTransaksi)
-	}
-
-	ruanganRoutes := route.Group("/api/ruangan")
-	{
-
-		ruanganRoutes.GET("", ruanganController.GetAllRuangan)
-	}
-
-	perawatRoutes := route.Group("/api/perawat")
-	{
-		perawatRoutes.POST("/new", perawatController.RegisterPerawat)
-		perawatRoutes.GET("", perawatController.GetAllPerawat)
-		perawatRoutes.GET("/:id", perawatController.GetPerawatByID)
-		perawatRoutes.GET("/jadwal", perawatController.GetJadwalPerawat)
-	}
-
-	obatRoutes := route.Group("/api/obat")
-	{
-		obatRoutes.POST("/new", obatController.RegisterObat)
-		obatRoutes.GET("", obatController.GetAllObat)
-		obatRoutes.GET("/:id", obatController.GetObatByID)
-	}
-
-	sesiDokterRoutes := route.Group("/api/sesi_dokter")
-	{
-		sesiDokterRoutes.POST("/new", sesidokterController.RegisterSesiDokter)
-		sesiDokterRoutes.GET("", sesidokterController.GetAllSesiDokter)
-		sesiDokterRoutes.GET("/:id", sesidokterController.GetSesiDokterByID)
-	}
 }
