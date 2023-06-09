@@ -19,6 +19,7 @@ type PasienService interface {
 	DeletePasien(ctx context.Context, UserID uuid.UUID) error
 	CheckPasien(ctx context.Context, email string) (bool, error)
 	Verify(ctx context.Context, email string, password string) (bool, error)
+	GetLatestPembelianObat(ctx context.Context, PasienID string) ([]dto.LatestPembelianObatDTO, error)
 }
 
 type pasienService struct {
@@ -97,4 +98,8 @@ func (ps *pasienService) Verify(ctx context.Context, email string, password stri
 	}
 
 	return false, nil
+}
+
+func (s *pasienService) GetLatestPembelianObat(ctx context.Context, pasienID string) ([]dto.LatestPembelianObatDTO, error) {
+	return s.pasienRepo.GetLatestPembelianObat(ctx, pasienID)
 }

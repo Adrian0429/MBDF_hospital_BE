@@ -33,6 +33,7 @@ func (ts *transaksiService) NewTransaksi(ctx context.Context, transaksiDTO dto.N
 	}
 	return ts.transaksiRepo.NewTransaksi(ctx, transaksi)
 }
+
 func (ts *transaksiService) GetAllTransaksi(ctx context.Context) ([]entities.Transaksi, error) {
 	return ts.transaksiRepo.GetAllTransaksi(ctx)
 }

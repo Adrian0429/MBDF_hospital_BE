@@ -8,30 +8,42 @@ import (
 )
 
 func Router(route *gin.Engine, userController controller.UserController, jwtService services.JWTService, pasienController controller.PasienController, dokterController controller.DokterController, transaksiController controller.TransaksiController, ruanganController controller.RuanganController, perawatController controller.PerawatController, obatController controller.ObatController, sesidokterController controller.SesiDokterController) {
-	routes := route.Group("/api/user")
-	{
-		routes.POST("", userController.RegisterUser)
-		routes.GET("", middleware.Authenticate(jwtService), userController.GetAllUser)
-		routes.POST("/login", userController.LoginUser)
-		routes.DELETE("/", middleware.Authenticate(jwtService), userController.DeleteUser)
-		routes.PUT("/", middleware.Authenticate(jwtService), userController.UpdateUser)
-		routes.GET("/me", middleware.Authenticate(jwtService), userController.MeUser)
-	}
+	// routes := route.Group("/api/user")
+	// {
+	// 	routes.POST("", userController.RegisterUser)
+	// 	routes.GET("", middleware.Authenticate(jwtService), userController.GetAllUser)
+	// 	routes.POST("/login", userController.LoginUser)
+	// 	routes.DELETE("/", middleware.Authenticate(jwtService), userController.DeleteUser)
+	// 	routes.PUT("/", middleware.Authenticate(jwtService), userController.UpdateUser)
+	// 	routes.GET("/me", middleware.Authenticate(jwtService), userController.MeUser)
+	// }
 
 	pasienRoutes := route.Group("/api/pasien")
 	{
 		pasienRoutes.POST("/register", pasienController.RegisterPasien)
-		pasienRoutes.GET("", middleware.Authenticate(jwtService), pasienController.GetAllPasien)
 		pasienRoutes.POST("/login", pasienController.LoginPasien)
 		pasienRoutes.DELETE("/", pasienController.DeletePasien)
 		pasienRoutes.PUT("/", middleware.Authenticate(jwtService), pasienController.UpdatePasien)
 		pasienRoutes.GET("/me", middleware.Authenticate(jwtService), pasienController.MePasien)
+		pasienRoutes.GET("/PembelianObat/:id", middleware.Authenticate(jwtService), pasienController.GetLatestPembelianObat)
 		// Add other pasien routes here if needed
 	}
 
 	adminRoutes := route.Group("/api/admin")
 	adminRoutes.Use(middleware.Authenticate(jwtService))
 	{
+		adminRoutes.POST("", userController.RegisterUser)
+		adminRoutes.GET("", middleware.Authenticate(jwtService), userController.GetAllUser)
+		adminRoutes.POST("/login", userController.LoginUser)
+		adminRoutes.DELETE("/", middleware.Authenticate(jwtService), userController.DeleteUser)
+		adminRoutes.PUT("/", middleware.Authenticate(jwtService), userController.UpdateUser)
+		adminRoutes.GET("/me", middleware.Authenticate(jwtService), userController.MeUser)
+
+		pasienAdminRoutes := adminRoutes.Group("/pasien")
+		{
+			pasienAdminRoutes.GET("", middleware.Authenticate(jwtService), pasienController.GetAllPasien)
+		}
+
 		dokterRoutes := adminRoutes.Group("/dokter")
 		{
 			dokterRoutes.POST("/new", dokterController.RegisterDokter)

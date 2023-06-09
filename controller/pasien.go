@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"context"
 	"net/http"
 
 	"github.com/Caknoooo/golang-clean_template/dto"
@@ -19,6 +20,7 @@ type PasienController interface {
 	LoginPasien(ctx *gin.Context)
 	UpdatePasien(ctx *gin.Context)
 	DeletePasien(ctx *gin.Context)
+	GetLatestPembelianObat(ctx *gin.Context)
 }
 
 type pasienController struct {
@@ -165,4 +167,18 @@ func (pc *pasienController) DeletePasien(ctx *gin.Context) {
 
 	res := utils.BuildResponseSuccess("Berhasil Menghapus Pasien", utils.EmptyObj{})
 	ctx.JSON(http.StatusOK, res)
+}
+
+func (c *pasienController) GetLatestPembelianObat(ctx *gin.Context) {
+	pasienID := ctx.Param("id")
+
+	// Call the service to get the latest pembelian obat
+	pembelianObat, err := c.pasienService.GetLatestPembelianObat(context.Background(), pasienID)
+	if err != nil {
+		// Handle the error appropriately
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to get latest pembelian obat"})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, pembelianObat)
 }

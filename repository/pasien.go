@@ -3,6 +3,7 @@ package repository
 import (
 	"context"
 
+	"github.com/Caknoooo/golang-clean_template/dto"
 	"github.com/Caknoooo/golang-clean_template/entities"
 	"github.com/google/uuid"
 	"gorm.io/gorm"
@@ -15,6 +16,7 @@ type PasienRepository interface {
 	GetPasienByEmail(ctx context.Context, Email string) (entities.Pasien, error)
 	UpdatePasien(ctx context.Context, pasien entities.Pasien) error
 	DeletePasien(ctx context.Context, UserID uuid.UUID) error
+	GetLatestPembelianObat(ctx context.Context, PasienID string) ([]dto.LatestPembelianObatDTO, error)
 }
 
 type pasienRepository struct {
@@ -75,4 +77,22 @@ func (pr *pasienRepository) DeletePasien(ctx context.Context, userID uuid.UUID) 
 		return err
 	}
 	return nil
+}
+
+func (pr *pasienRepository) GetLatestPembelianObat(ctx context.Context, PasienID string) ([]dto.LatestPembelianObatDTO, error) {
+	var Pembelian []dto.LatestPembelianObatDTO
+
+	query := `
+		SELECT transaksis.Tanggal, obats.Nama_Obat, pembelian_obats.Jumlah_Obat
+		FROM transaksis
+		JOIN pembelian_obats ON transaksis.ID_Transaksi = pembelian_obats.transaksi_id
+		JOIN obats ON pembelian_obats.obat_id = obats.ID_Obat
+		WHERE transaksis.Pasien_NIK_Pasien = ?;
+	`
+
+	if err := pr.connection.Raw(query, PasienID).Scan(&Pembelian).Error; err != nil {
+		return nil, err
+	}
+
+	return Pembelian, nil
 }

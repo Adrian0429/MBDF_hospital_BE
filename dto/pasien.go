@@ -36,3 +36,20 @@ type PasienLoginDTO struct {
 	Email    string `gorm:"type:varchar(100)" json:"email"`
 	Password string `gorm:"type:varchar(100)" json:"password"`
 }
+
+type LatestPembelianObatDTO struct {
+	Tanggal     string `gorm:"type:date;not null" json:"Tanggal"`
+	Nama_Obat   string `gorm:"type:varchar(50);not null" json:"nama_obat"`
+	Jumlah_Obat int    `gorm:"type:int;not null" json:"jumlah_obat"`
+}
+
+
+
+
+
+
+
+
+
+
+
