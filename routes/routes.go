@@ -8,7 +8,7 @@ import (
 )
 
 func Router(route *gin.Engine, userController controller.UserController, jwtService services.JWTService, pasienController controller.PasienController, dokterController controller.DokterController, transaksiController controller.TransaksiController, ruanganController controller.RuanganController, perawatController controller.PerawatController, obatController controller.ObatController, sesidokterController controller.SesiDokterController) {
-	routes := route.Group("/api/user")
+	routes := route.Group("/api/admin")
 	{
 		routes.POST("", userController.RegisterUser)
 		routes.GET("", middleware.Authenticate(jwtService), userController.GetAllUser)
@@ -21,7 +21,11 @@ func Router(route *gin.Engine, userController controller.UserController, jwtServ
 	pasienRoutes := route.Group("/api/pasien")
 	{
 		pasienRoutes.POST("/register", pasienController.RegisterPasien)
-		pasienRoutes.GET("", pasienController.GetAllPasien)
+		pasienRoutes.GET("", middleware.Authenticate(jwtService), pasienController.GetAllPasien)
+		pasienRoutes.POST("/login", pasienController.LoginPasien)
+		pasienRoutes.DELETE("/", pasienController.DeletePasien)
+		pasienRoutes.PUT("/", middleware.Authenticate(jwtService), pasienController.UpdatePasien)
+		pasienRoutes.GET("/me", middleware.Authenticate(jwtService), pasienController.MePasien)
 		// Add other pasien routes here if needed
 	}
 

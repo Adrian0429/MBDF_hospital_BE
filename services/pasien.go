@@ -32,7 +32,17 @@ func NewPasienService(pasienRepo repository.PasienRepository) PasienService {
 }
 
 func (ps *pasienService) RegisterPasien(ctx context.Context, pasienDTO dto.PasienCreateDTO) (entities.Pasien, error) {
-	pasien := entities.Pasien{}
+	pasien := entities.Pasien{
+		NIK_pasien:          pasienDTO.NIK_pasien,
+		Uid:                 pasienDTO.Uid,
+		Nama_Pasien:         pasienDTO.Nama_Pasien,
+		Tanggal_Lahir:       pasienDTO.Tanggal_Lahir,
+		No_Telepon:          pasienDTO.No_Telepon,
+		Email:               pasienDTO.Email,
+		Password:            pasienDTO.Password,
+		Tanggal_Daftar_Akun: pasienDTO.Tanggal_Daftar_Akun,
+	}
+
 	err := smapping.FillStruct(&pasien, smapping.MapFields(pasienDTO))
 	if err != nil {
 		return entities.Pasien{}, err

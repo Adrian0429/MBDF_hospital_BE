@@ -3,8 +3,8 @@ package dto
 import "github.com/google/uuid"
 
 type PasienCreateDTO struct {
-	Uid                 uuid.UUID `gorm:"type:uuid;default:uuid_generate_v4()" json:"uid"`
 	NIK_pasien          string    `gorm:"type:char(16);primaryKey;not null" json:"nik_pasien"`
+	Uid                 uuid.UUID `gorm:"type:uuid;default:uuid_generate_v4()" json:"uid"`
 	Nama_Pasien         string    `gorm:"type:varchar(50);not null" json:"nama"`
 	Jenis_Kelamin       string    `gorm:"type:char(1);not null" json:"jenis_kelamin"`
 	Tanggal_Lahir       string    `gorm:"type:date;not null" json:"tanggal_lahir"`
