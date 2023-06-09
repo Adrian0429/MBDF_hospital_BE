@@ -17,7 +17,7 @@ func Authenticate(jwtService services.JWTService) gin.HandlerFunc {
 			ctx.AbortWithStatusJSON(http.StatusUnauthorized, response)
 			return
 		}
-		
+
 		if !strings.Contains(authHeader, "Bearer ") {
 			response := utils.BuildResponseFailed("Gagal Memproses Request", "Token Tidak Valid", nil)
 			ctx.AbortWithStatusJSON(http.StatusUnauthorized, response)

@@ -31,11 +31,12 @@ func Router(route *gin.Engine, userController controller.UserController, jwtServ
 	}
 
 	adminRoutes := route.Group("/api/admin")
+	adminRoutes.POST("/login", userController.LoginUser)
+	adminRoutes.POST("", userController.RegisterUser)
 	adminRoutes.Use(middleware.Authenticate(jwtService))
+	
 	{
-		adminRoutes.POST("", userController.RegisterUser)
 		adminRoutes.GET("", middleware.Authenticate(jwtService), userController.GetAllUser)
-		adminRoutes.POST("/login", userController.LoginUser)
 		adminRoutes.DELETE("/", middleware.Authenticate(jwtService), userController.DeleteUser)
 		adminRoutes.PUT("/", middleware.Authenticate(jwtService), userController.UpdateUser)
 		adminRoutes.GET("/me", middleware.Authenticate(jwtService), userController.MeUser)
