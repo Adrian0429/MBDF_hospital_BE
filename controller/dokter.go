@@ -14,8 +14,10 @@ import (
 type DokterController interface {
 	RegisterDokter(ctx *gin.Context)
 	GetAllDokter(ctx *gin.Context)
+	AllDokterUser(ctx *gin.Context)
 	GetDokterByID(ctx *gin.Context)
 	UpdateDoctor(ctx *gin.Context)
+	Jadwal_Dokter_Admin(ctx *gin.Context)
 }
 
 type dokterController struct {
@@ -46,6 +48,15 @@ func (dc *dokterController) RegisterDokter(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, res)
 }
 
+func (dc *dokterController) AllDokterUser(ctx *gin.Context) {
+	dokter, err := dc.dokterService.GetAllDokter(ctx.Request.Context())
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	ctx.JSON(http.StatusOK, dokter)
+}
+
 func (dc *dokterController) GetAllDokter(ctx *gin.Context) {
 	dokter, err := dc.dokterService.GetAllDokter(ctx.Request.Context())
 	if err != nil {
@@ -56,12 +67,14 @@ func (dc *dokterController) GetAllDokter(ctx *gin.Context) {
 	dtoList := make([]dto.AllDokterDTO, 0, len(dokter))
 	for _, dokterItem := range dokter {
 		dtoItem := dto.AllDokterDTO{
-			Nama_Dokter:      dokterItem.Nama_Dokter,
-			Jenis_Kelamin:    dokterItem.Jenis_Kelamin,
-			Tanggal_Lahir:    dokterItem.Tanggal_Lahir,
-			No_Telepon:       dokterItem.No_Telepon,
-			Harga_Konsultasi: dokterItem.Harga_Konsultasi,
-			Poli_Kode_Poli:   mapKodePoli(dokterItem.Poli_Kode_Poli),
+			ID_Dokter:   dokterItem.ID_Dokter,
+			Nama_Dokter: dokterItem.Nama_Dokter,
+			// Jenis_Kelamin:    dokterItem.Jenis_Kelamin,
+			Tanggal_Lahir: dokterItem.Tanggal_Lahir,
+			Nama_Poli:     dokterItem.Nama_Poli,
+			// No_Telepon:       dokterItem.No_Telepon,
+			// Harga_Konsultasi: dokterItem.Harga_Konsultasi,
+			// Poli_Kode_Poli:   mapKodePoli(dokterItem.Poli_Kode_Poli),
 		}
 		dtoList = append(dtoList, dtoItem)
 	}
@@ -121,4 +134,15 @@ func (dc *dokterController) UpdateDoctor(ctx *gin.Context) {
 
 	res := utils.BuildResponseSuccess("Berhasil Update dokter", DokterDTO)
 	ctx.JSON(http.StatusOK, res)
+}
+
+func (dc *dokterController) Jadwal_Dokter_Admin(ctx *gin.Context) {
+	jadwal, err := dc.dokterService.Jadwal_Dokter_Admin(ctx.Request.Context())
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, jadwal)
+
 }

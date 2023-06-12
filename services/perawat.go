@@ -11,7 +11,7 @@ import (
 
 type PerawatService interface {
 	RegisterPerawat(ctx context.Context, perawatDTO dto.PerawatCreateDTO) (entities.Perawat, error)
-	GetAllPerawat(ctx context.Context) ([]entities.Perawat, error)
+	GetAllPerawat(ctx context.Context) ([]dto.GetAllPerawat, error)
 	GetPerawatByID(ctx context.Context, PerawatID string) (entities.Perawat, error)
 	GetJadwalPerawat(ctx context.Context) ([]dto.JadwalPerawatDTO, error)
 }
@@ -34,7 +34,7 @@ func (ds *perawatService) RegisterPerawat(ctx context.Context, perawatDTO dto.Pe
 	}
 	return ds.perawatRepository.RegisterPerawat(ctx, perawat)
 }
-func (ds *perawatService) GetAllPerawat(ctx context.Context) ([]entities.Perawat, error) {
+func (ds *perawatService) GetAllPerawat(ctx context.Context) ([]dto.GetAllPerawat, error) {
 	return ds.perawatRepository.GetAllPerawat(ctx)
 }
 

@@ -12,6 +12,7 @@ type Pasien struct {
 	Email               string    `gorm:"type:varchar(100)" json:"email"`
 	Password            string    `gorm:"type:varchar(100)" json:"password"`
 	Tanggal_Daftar_Akun string    `gorm:"type:date" json:"tanggal_daftar_akun"`
+	Role                string    `gorm:"type:varchar(100)" json:"role"`
 
 	Transaksi []Transaksi `gorm:"foreignKey:Pasien_NIK_Pasien" json:"transaksis,omitempty"`
 }

@@ -12,7 +12,7 @@ import (
 
 type PasienService interface {
 	RegisterPasien(ctx context.Context, pasienDTO dto.PasienCreateDTO) (entities.Pasien, error)
-	GetAllPasien(ctx context.Context) ([]entities.Pasien, int, error)
+	GetAllPasien(ctx context.Context) ([]dto.GetAllPasienDTO, int, error)
 	GetPasienByID(ctx context.Context, PasienID uuid.UUID) (entities.Pasien, error)
 	GetPasienByEmail(ctx context.Context, Email string) (entities.Pasien, error)
 	UpdatePasien(ctx context.Context, UpdatePasienDTO dto.UpdatePasienDTO) error
@@ -21,7 +21,8 @@ type PasienService interface {
 	Verify(ctx context.Context, email string, password string) (bool, error)
 	GetLatestPembelianObat(ctx context.Context, PasienID string) ([]dto.LatestPembelianObatDTO, error)
 	GetLatestReservation(ctx context.Context, NIK string) ([]dto.AmbilTransaksiTerbaru, error)
-
+	Transaksi_Pasien(ctx context.Context) ([]dto.Transaksi_PasienDTO, error)
+	Jadwal_Dokter_User(ctx context.Context) ([]dto.Jadwal_Dokter_UserDTO, error)
 }
 
 type pasienService struct {
@@ -35,25 +36,17 @@ func NewPasienService(pasienRepo repository.PasienRepository) PasienService {
 }
 
 func (ps *pasienService) RegisterPasien(ctx context.Context, pasienDTO dto.PasienCreateDTO) (entities.Pasien, error) {
-	pasien := entities.Pasien{
-		NIK_pasien:          pasienDTO.NIK_pasien,
-		Uid:                 pasienDTO.Uid,
-		Nama_Pasien:         pasienDTO.Nama_Pasien,
-		Tanggal_Lahir:       pasienDTO.Tanggal_Lahir,
-		No_Telepon:          pasienDTO.No_Telepon,
-		Email:               pasienDTO.Email,
-		Password:            pasienDTO.Password,
-		Tanggal_Daftar_Akun: pasienDTO.Tanggal_Daftar_Akun,
-	}
+	pasien := entities.Pasien{}
 
 	err := smapping.FillStruct(&pasien, smapping.MapFields(pasienDTO))
+	pasien.Role = "user"
 	if err != nil {
 		return entities.Pasien{}, err
 	}
 	return ps.pasienRepo.RegisterPasien(ctx, pasien)
 }
 
-func (ps *pasienService) GetAllPasien(ctx context.Context) ([]entities.Pasien, int, error) {
+func (ps *pasienService) GetAllPasien(ctx context.Context) ([]dto.GetAllPasienDTO, int, error) {
 	return ps.pasienRepo.GetAllPasien(ctx)
 }
 
@@ -102,10 +95,18 @@ func (ps *pasienService) Verify(ctx context.Context, email string, password stri
 	return false, nil
 }
 
-func (s *pasienService) GetLatestPembelianObat(ctx context.Context, pasienID string) ([]dto.LatestPembelianObatDTO, error) {
-	return s.pasienRepo.GetLatestPembelianObat(ctx, pasienID)
+func (ps *pasienService) GetLatestPembelianObat(ctx context.Context, pasienID string) ([]dto.LatestPembelianObatDTO, error) {
+	return ps.pasienRepo.GetLatestPembelianObat(ctx, pasienID)
 }
 
 func (ps *pasienService) GetLatestReservation(ctx context.Context, NIK string) ([]dto.AmbilTransaksiTerbaru, error) {
 	return ps.pasienRepo.GetLatestReservation(ctx, NIK)
+}
+
+func (ps *pasienService) Transaksi_Pasien(ctx context.Context) ([]dto.Transaksi_PasienDTO, error) {
+	return ps.pasienRepo.Transaksi_Pasien(ctx)
+}
+
+func (ps *pasienService) Jadwal_Dokter_User(ctx context.Context) ([]dto.Jadwal_Dokter_UserDTO, error) {
+	return ps.pasienRepo.Jadwal_Dokter_User(ctx)
 }

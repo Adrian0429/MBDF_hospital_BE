@@ -11,7 +11,7 @@ import (
 
 type ObatService interface {
 	RegisterObat(ctx context.Context, obatDTO dto.ObatCreateDTO) (entities.Obat, error)
-	GetAllObat(ctx context.Context) ([]entities.Obat, error)
+	GetAllObat(ctx context.Context) ([]dto.AllObat, error)
 	GetObatByID(ctx context.Context, ObatID string) (entities.Obat, error)
 }
 
@@ -33,7 +33,7 @@ func (ds *obatService) RegisterObat(ctx context.Context, obatDTO dto.ObatCreateD
 	}
 	return ds.obatRepository.RegisterObat(ctx, obat)
 }
-func (ds *obatService) GetAllObat(ctx context.Context) ([]entities.Obat, error) {
+func (ds *obatService) GetAllObat(ctx context.Context) ([]dto.AllObat, error) {
 	return ds.obatRepository.GetAllObat(ctx)
 }
 

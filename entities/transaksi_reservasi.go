@@ -18,3 +18,6 @@ type Transaksi_Reservasi struct {
 	Obat           []*Obat     `gorm:"many2many:resep;" json:"obat,omitempty"`
 	Diagnosa       []*Diagnosa `gorm:"many2many:transaksi_reservasi_diagnosa;" json:"diagnosa,omitempty"`
 }
+
+
+

@@ -11,13 +11,15 @@ import (
 
 type PasienRepository interface {
 	RegisterPasien(ctx context.Context, pasien entities.Pasien) (entities.Pasien, error)
-	GetAllPasien(ctx context.Context) ([]entities.Pasien, int, error)
+	GetAllPasien(ctx context.Context) ([]dto.GetAllPasienDTO, int, error)
 	GetPasienByID(ctx context.Context, PasienID uuid.UUID) (entities.Pasien, error)
 	GetPasienByEmail(ctx context.Context, Email string) (entities.Pasien, error)
 	UpdatePasien(ctx context.Context, pasien entities.Pasien) error
 	DeletePasien(ctx context.Context, UserID uuid.UUID) error
-	GetLatestPembelianObat(ctx context.Context, PasienID string)([]dto.LatestPembelianObatDTO, error)
+	GetLatestPembelianObat(ctx context.Context, PasienID string) ([]dto.LatestPembelianObatDTO, error)
 	GetLatestReservation(ctx context.Context, NIK string) ([]dto.AmbilTransaksiTerbaru, error)
+	Transaksi_Pasien(ctx context.Context) ([]dto.Transaksi_PasienDTO, error)
+	Jadwal_Dokter_User(ctx context.Context) ([]dto.Jadwal_Dokter_UserDTO, error)
 }
 
 type pasienRepository struct {
@@ -35,16 +37,6 @@ func (pr *pasienRepository) RegisterPasien(ctx context.Context, pasien entities.
 		return entities.Pasien{}, err
 	}
 	return pasien, nil
-}
-
-func (pr *pasienRepository) GetAllPasien(ctx context.Context) ([]entities.Pasien, int, error) {
-	var pasien []entities.Pasien
-	var count int64
-
-	if err := pr.connection.Table("pasiens").Find(&pasien).Count(&count).Error; err != nil {
-		return nil, 0, err
-	}
-	return pasien, int(count), nil
 }
 
 func (pr *pasienRepository) GetPasienByID(ctx context.Context, PasienID uuid.UUID) (entities.Pasien, error) {
@@ -80,6 +72,17 @@ func (pr *pasienRepository) DeletePasien(ctx context.Context, userID uuid.UUID) 
 	return nil
 }
 
+// fungsi yang tidak dipake otentikasi
+func (pr *pasienRepository) GetAllPasien(ctx context.Context) ([]dto.GetAllPasienDTO, int, error) {
+	var pasien []dto.GetAllPasienDTO
+	var count int64
+
+	if err := pr.connection.Table("view_pasien").Scan(&pasien).Count(&count).Error; err != nil {
+		return nil, 0, err
+	}
+	return pasien, int(count), nil
+}
+
 func (pr *pasienRepository) GetLatestPembelianObat(ctx context.Context, PasienID string) ([]dto.LatestPembelianObatDTO, error) {
 	var Pembelian []dto.LatestPembelianObatDTO
 	query := `
@@ -97,12 +100,51 @@ func (pr *pasienRepository) GetLatestPembelianObat(ctx context.Context, PasienID
 	return Pembelian, nil
 }
 
-func (sdr *pasienRepository) GetLatestReservation(ctx context.Context, NIK string) ([]dto.AmbilTransaksiTerbaru, error) {
+func (pr *pasienRepository) GetLatestReservation(ctx context.Context, NIK string) ([]dto.AmbilTransaksiTerbaru, error) {
 	var reservasiTerbaru []dto.AmbilTransaksiTerbaru
 	query := "SELECT Tanggal_Reservasi, Nama_Dokter, Diagnosa_Nama_Diagnosa, Nama_Ruangan FROM Pasiens JOIN Transaksis ON NIK_Pasien = Pasien_NIK_Pasien JOIN Transaksi_Reservasis ON ID_Transaksi = Transaksi_ID_Transaksi JOIN Transaksi_Reservasi_Diagnosas ON ID_Medical_Record = Transaksi_Reservasi_ID_Medical_Record JOIN Ruangans ON Ruangan_ID_Ruangan = ID_Ruangan JOIN Sesi_Dokters ON Sesi_Dokter_ID = ID_Sesi JOIN Dokters on Dokter_ID_Dokter = ID_Dokter WHERE NIK_Pasien = ?;"
 	// query := "select * from Jadwal_Dokter"
-	if err := sdr.connection.Raw(query, NIK).Find(&reservasiTerbaru).Error; err != nil {
+	if err := pr.connection.Raw(query, NIK).Find(&reservasiTerbaru).Error; err != nil {
 		return nil, err
 	}
 	return reservasiTerbaru, nil
+}
+
+func (pr *pasienRepository) Transaksi_Pasien(ctx context.Context) ([]dto.Transaksi_PasienDTO, error) {
+	var transaksi_Pasien []dto.Transaksi_PasienDTO
+
+	viewCreationQuery := `
+		CREATE OR REPLACE VIEW Transaksi_Pasien AS 
+		SELECT ID_Transaksi, Tanggal, Total_Harga_DP, NIK_Pasien, Nama_Pasien, Jenis_Kelamin, No_Telepon FROM
+		Transaksis JOIN Pasiens on Pasien_NIK_Pasien = NIK_Pasien;`
+
+	if err := pr.connection.Exec(viewCreationQuery).Error; err != nil {
+		return nil, err
+	}
+
+	query := `select * from Transaksi_Pasien`
+	if err := pr.connection.Raw(query).Scan(&transaksi_Pasien).Error; err != nil {
+		return nil, err
+	}
+	return transaksi_Pasien, nil
+}
+
+func (pr *pasienRepository) Jadwal_Dokter_User(ctx context.Context) ([]dto.Jadwal_Dokter_UserDTO, error) {
+	var jadwal []dto.Jadwal_Dokter_UserDTO
+
+	viewCreationQuery := `
+		CREATE OR REPLACE VIEW Jadwal_Dokter_User AS 
+SELECT Nama_Dokter, Jam_Masuk, Jam_Keluar, Jenis_Kelamin, Harga_Konsultasi
+FROM Dokters JOIN Sesi_Dokters ON ID_Dokter = Dokter_ID_Dokter;
+`
+
+	if err := pr.connection.Exec(viewCreationQuery).Error; err != nil {
+		return nil, err
+	}
+
+	query := `select * from jadwal_dokter_user`
+	if err := pr.connection.Raw(query).Scan(&jadwal).Error; err != nil {
+		return nil, err
+	}
+	return jadwal, nil
 }

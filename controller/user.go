@@ -44,23 +44,23 @@ func (uc *userController) RegisterUser(ctx *gin.Context) {
 	}
 	result, err := uc.userService.RegisterUser(ctx.Request.Context(), user)
 	if err != nil {
-		res := utils.BuildResponseFailed("Gagal Menambahkan User", "Failed", utils.EmptyObj{})
+		res := utils.BuildResponseFailed("Gagal Menambahkan admin", "Failed", utils.EmptyObj{})
 		ctx.JSON(http.StatusBadRequest, res)
 		return
 	}
 
-	res := utils.BuildResponseSuccess("Berhasil Menambahkan User", result)
+	res := utils.BuildResponseSuccess("Berhasil Menambahkan admin", result)
 	ctx.JSON(http.StatusOK, res)
 }
 
 func (uc *userController) GetAllUser(ctx *gin.Context) {
 	result, err := uc.userService.GetAllUser(ctx.Request.Context())
 	if err != nil {
-		res := utils.BuildResponseFailed("Gagal Mendapatkan List User", err.Error(), utils.EmptyObj{})
+		res := utils.BuildResponseFailed("Gagal Mendapatkan List admin", err.Error(), utils.EmptyObj{})
 		ctx.JSON(http.StatusBadRequest, res)
 		return
 	}
-	res := utils.BuildResponseSuccess("Berhasil Mendapatkan List User", result)
+	res := utils.BuildResponseSuccess("Berhasil Mendapatkan List admin", result)
 	ctx.JSON(http.StatusOK, res)
 }
 
@@ -75,12 +75,12 @@ func (uc *userController) MeUser(ctx *gin.Context) {
 
 	result, err := uc.userService.GetUserByID(ctx.Request.Context(), userID)
 	if err != nil {
-		res := utils.BuildResponseFailed("Gagal Mendapatkan User", err.Error(), utils.EmptyObj{})
+		res := utils.BuildResponseFailed("Gagal Mendapatkan admin", err.Error(), utils.EmptyObj{})
 		ctx.JSON(http.StatusBadRequest, res)
 		return
 	}
 
-	res := utils.BuildResponseSuccess("Berhasil Mendapatkan User", result)
+	res := utils.BuildResponseSuccess("Berhasil Mendapatkan admin", result)
 	ctx.JSON(http.StatusOK, res)
 }
 
@@ -128,12 +128,12 @@ func (uc *userController) UpdateUser(ctx *gin.Context) {
 
 	userDTO.ID = userID
 	if err = uc.userService.UpdateUser(ctx.Request.Context(), userDTO); err != nil {
-		res := utils.BuildResponseFailed("Gagal Update User", err.Error(), utils.EmptyObj{})
+		res := utils.BuildResponseFailed("Gagal Update admin", err.Error(), utils.EmptyObj{})
 		ctx.AbortWithStatusJSON(http.StatusBadRequest, res)
 		return
 	}
 
-	res := utils.BuildResponseSuccess("Berhasil Update User", userDTO)
+	res := utils.BuildResponseSuccess("Berhasil Update admin", userDTO)
 	ctx.JSON(http.StatusOK, res)
 }
 
@@ -147,11 +147,11 @@ func (uc *userController) DeleteUser(ctx *gin.Context) {
 	}
 
 	if err = uc.userService.DeleteUser(ctx.Request.Context(), userID); err != nil {
-		res := utils.BuildResponseFailed("Gagal Menghapus User", err.Error(), utils.EmptyObj{})
+		res := utils.BuildResponseFailed("Gagal Menghapus admin", err.Error(), utils.EmptyObj{})
 		ctx.AbortWithStatusJSON(http.StatusBadRequest, res)
 		return
 	}
 
-	res := utils.BuildResponseSuccess("Berhasil Menghapus User", utils.EmptyObj{})
+	res := utils.BuildResponseSuccess("Berhasil Menghapus admin", utils.EmptyObj{})
 	ctx.JSON(http.StatusOK, res)
 }

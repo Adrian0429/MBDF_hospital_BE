@@ -3,6 +3,7 @@ package controller
 import (
 	"context"
 	"net/http"
+	"time"
 
 	"github.com/Caknoooo/golang-clean_template/dto"
 	"github.com/Caknoooo/golang-clean_template/entities"
@@ -22,6 +23,8 @@ type PasienController interface {
 	DeletePasien(ctx *gin.Context)
 	GetLatestPembelianObat(ctx *gin.Context)
 	GetLatestReservation(ctx *gin.Context)
+	Transaksi_Pasien(ctx *gin.Context)
+	Jadwal_Dokter_User(ctx *gin.Context)
 }
 
 type pasienController struct {
@@ -42,7 +45,7 @@ func (pc *pasienController) RegisterPasien(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-
+	pasien.Tanggal_Daftar_Akun = time.Now().Format("2006-01-02")
 	result, err := pc.pasienService.RegisterPasien(ctx.Request.Context(), pasien)
 
 	if err != nil {
@@ -68,9 +71,7 @@ func (pc *pasienController) GetAllPasien(ctx *gin.Context) {
 			Count:         count,
 			NIK_pasien:    pasien.NIK_pasien,
 			Nama_Pasien:   pasien.Nama_Pasien,
-			Jenis_Kelamin: pasien.Jenis_Kelamin,
 			Tanggal_Lahir: pasien.Tanggal_Lahir,
-			No_Telepon:    pasien.No_Telepon,
 		}
 	}
 
@@ -193,4 +194,26 @@ func (pc *pasienController) GetLatestReservation(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusOK, reservasi)
+}
+
+func (pc *pasienController) Transaksi_Pasien(ctx *gin.Context) {
+	Transaksi, err := pc.pasienService.Transaksi_Pasien(ctx.Request.Context())
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, Transaksi)
+
+}
+
+func (pc *pasienController) Jadwal_Dokter_User(ctx *gin.Context) {
+	jadwal, err := pc.pasienService.Jadwal_Dokter_User(ctx.Request.Context())
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, jadwal)
+
 }

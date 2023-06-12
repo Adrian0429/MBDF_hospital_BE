@@ -18,9 +18,7 @@ type GetAllPasienDTO struct {
 	Count         int    `json:"count"`
 	NIK_pasien    string `json:"nik_pasien"`
 	Nama_Pasien   string `json:"nama"`
-	Jenis_Kelamin string `json:"jenis_kelamin"`
 	Tanggal_Lahir string `json:"tanggal_lahir"`
-	No_Telepon    string `json:"no_telepon"`
 }
 
 type UpdatePasienDTO struct {
@@ -43,13 +41,20 @@ type LatestPembelianObatDTO struct {
 	Jumlah_Obat int    `gorm:"type:int;not null" json:"jumlah_obat"`
 }
 
+type Transaksi_PasienDTO struct {
+	ID_Transaksi   int    `gorm:"type:int;primaryKey;not null" json:"id_transaksi"`
+	Tanggal        string `gorm:"type:date;not null" json:"Tanggal"`
+	Total_Harga_DP string `gorm:"type:money;not null" json:"Total_DP"`
+	NIK_pasien     string `gorm:"type:char(16);primaryKey;not null" json:"nik_pasien"`
+	Nama_Pasien    string `gorm:"type:varchar(50);not null" json:"nama"`
+	Jenis_Kelamin  string `gorm:"type:char(1);not null" json:"jenis_kelamin"`
+	No_Telepon     string `gorm:"type:varchar(15);not null" json:"no_telepon"`
+}
 
-
-
-
-
-
-
-
-
-
+type Jadwal_Dokter_UserDTO struct {
+	Nama_Dokter      string `gorm:"type:varchar(50);not null" json:"nama_dokter"`
+	Jam_Masuk        int    `gorm:"type:int;not null" json:"jam_masuk"`
+	Jam_Keluar       int    `gorm:"type:int;not null" json:"jam_keluar"`
+	Jenis_Kelamin    string `gorm:"type:char(1);not null" json:"jenis_kelamin"`
+	Harga_Konsultasi string `gorm:"type:money" json:"harga_Konsul"`
+}

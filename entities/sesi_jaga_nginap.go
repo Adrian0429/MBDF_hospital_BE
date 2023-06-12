@@ -6,7 +6,7 @@ type Sesi_Jaga_Nginap struct {
 	Jam_Masuk  int    `gorm:"type:int;not null" json:"jam_masuk"`
 	Jam_Keluar int    `gorm:"type:int;not null" json:"jam_keluar"`
 
-	RuanganID string  `gorm:"type:varchar(5)" json:"Ruangan_ID_Ruangan" binding:"required"`
+	RuanganID string  `gorm:"type:varchar(6)" json:"Ruangan_ID_Ruangan" binding:"required"`
 	Ruangan   Ruangan `gorm:"foreignKey:RuanganID" json:"ruangan"`
 
 	PerawatID string  `gorm:"type:varchar(4)" json:"Perawat_ID_Perawat" binding:"required"`

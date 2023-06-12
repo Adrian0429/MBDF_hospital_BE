@@ -40,6 +40,7 @@ func SetUpDatabaseConnection() *gorm.DB {
 	}
 
 	if err := db.AutoMigrate(
+		entities.Day_name{},
 		entities.User{},
 		entities.Diagnosa{},
 		entities.Dokter{},

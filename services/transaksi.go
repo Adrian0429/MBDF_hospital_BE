@@ -41,4 +41,3 @@ func (ts *transaksiService) GetAllTransaksi(ctx context.Context) ([]entities.Tra
 func (ts *transaksiService) GetTransaksiByIDPasien(ctx context.Context, PasienID string) ([]entities.Transaksi, error) {
 	return ts.transaksiRepo.GetTransaksiByIDPasien(ctx, PasienID)
 }
-

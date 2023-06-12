@@ -41,6 +41,7 @@ func (sdr *sesiDokterRepository) GetAllSesiDokter(ctx context.Context) ([]dto.Am
 	return sesiDokter, nil
 }
 
+
 func (sdr *sesiDokterRepository) GetSesiDokterByID(ctx context.Context, SesiDokterID string) (entities.Sesi_Dokter, error) {
 	var sesiDokter entities.Sesi_Dokter
 	if err := sdr.connection.Table("sesi_dokters").Where("ID_SesiDokter = ?", SesiDokterID).First(&sesiDokter).Error; err != nil {

@@ -3,13 +3,14 @@ package repository
 import (
 	"context"
 
+	"github.com/Caknoooo/golang-clean_template/dto"
 	"github.com/Caknoooo/golang-clean_template/entities"
 	"gorm.io/gorm"
 )
 
 type ObatRepository interface {
 	RegisterObat(ctx context.Context, obat entities.Obat) (entities.Obat, error)
-	GetAllObat(ctx context.Context) ([]entities.Obat, error)
+	GetAllObat(ctx context.Context) ([]dto.AllObat, error)
 	GetObatByID(ctx context.Context, ObatID string) (entities.Obat, error)
 }
 
@@ -30,9 +31,10 @@ func (dr *obatRepository) RegisterObat(ctx context.Context, obat entities.Obat) 
 	return obat, nil
 }
 
-func (dr *obatRepository) GetAllObat(ctx context.Context) ([]entities.Obat, error) {
-	var obat []entities.Obat
-	if err := dr.connection.Table("obats").Find(&obat).Error; err != nil {
+func (dr *obatRepository) GetAllObat(ctx context.Context) ([]dto.AllObat, error) {
+	var obat []dto.AllObat
+
+	if err := dr.connection.Raw("select * from view_obat").Scan(&obat).Error; err != nil {
 		return nil, err
 	}
 	return obat, nil

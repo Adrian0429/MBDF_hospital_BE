@@ -11,9 +11,11 @@ import (
 
 type DokterService interface {
 	RegisterDokter(ctx context.Context, dokterDTO dto.DokterCreateDTO) (entities.Dokter, error)
-	GetAllDokter(ctx context.Context) ([]entities.Dokter, error)
+	GetAllDokter(ctx context.Context) ([]dto.AllDokterDTO, error)
+	AllDokterUser(ctx context.Context) ([]dto.AllDokterUserDTO, error)
 	GetDokterByID(ctx context.Context, DokterID string) (entities.Dokter, error)
 	UpdateDoctor(ctx context.Context, DokterDTO dto.UpdateDokterDTO) error
+	Jadwal_Dokter_Admin(ctx context.Context) ([]dto.Jadwal_Dokter_AdminDTO, error)
 }
 
 type dokterService struct {
@@ -35,8 +37,12 @@ func (ds *dokterService) RegisterDokter(ctx context.Context, dokterDTO dto.Dokte
 	return ds.dokterRepository.RegisterDokter(ctx, dokter)
 }
 
-func (ds *dokterService) GetAllDokter(ctx context.Context) ([]entities.Dokter, error) {
+func (ds *dokterService) GetAllDokter(ctx context.Context) ([]dto.AllDokterDTO, error) {
 	return ds.dokterRepository.GetAllDokter(ctx)
+}
+
+func (ds *dokterService) AllDokterUser(ctx context.Context) ([]dto.AllDokterUserDTO, error) {
+	return ds.dokterRepository.AllDokterUser(ctx)
 }
 
 func (ds *dokterService) UpdateDoctor(ctx context.Context, DokterDTO dto.UpdateDokterDTO) error {
@@ -49,4 +55,8 @@ func (ds *dokterService) UpdateDoctor(ctx context.Context, DokterDTO dto.UpdateD
 
 func (ds *dokterService) GetDokterByID(ctx context.Context, DokterID string) (entities.Dokter, error) {
 	return ds.dokterRepository.GetDokterByID(ctx, DokterID)
+}
+
+func (ds *dokterService) Jadwal_Dokter_Admin(ctx context.Context) ([]dto.Jadwal_Dokter_AdminDTO, error) {
+	return ds.dokterRepository.Jadwal_Dokter_Admin(ctx)
 }

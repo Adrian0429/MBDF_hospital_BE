@@ -3,6 +3,7 @@ package controller
 import (
 	//"github.com/Caknoooo/golang-clean_template/entities"
 	"net/http"
+	"time"
 
 	"github.com/Caknoooo/golang-clean_template/dto"
 	"github.com/Caknoooo/golang-clean_template/services"
@@ -32,7 +33,8 @@ func (tc *transaksiController) NewTransaksi(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-
+	
+	transaksi.Tanggal = time.Now().Format("2006-01-02")
 	result, err := tc.transaksiService.NewTransaksi(ctx.Request.Context(), transaksi)
 
 	if err != nil {
@@ -66,4 +68,3 @@ func (tc *transaksiController) GetTransaksiByIDPasien(ctx *gin.Context) {
 
 	ctx.JSON(http.StatusOK, transaksi)
 }
-

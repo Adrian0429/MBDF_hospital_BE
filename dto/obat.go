@@ -7,3 +7,7 @@ type ObatCreateDTO struct {
 	Stok       int    `gorm:"type:int;not null" json:"Stok"`
 	Umum       bool   `gorm:"type:bool;not null" json:"Umum"`
 }
+
+type AllObat struct {
+	Nama_Obat string `gorm:"type:varchar(50);not null" json:"nama_obat"`
+}

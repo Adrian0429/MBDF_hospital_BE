@@ -9,7 +9,7 @@ import (
 	"github.com/Caknoooo/golang-clean_template/repository"
 	"github.com/Caknoooo/golang-clean_template/routes"
 	"github.com/Caknoooo/golang-clean_template/services"
-	
+
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 )
@@ -49,11 +49,15 @@ func main() {
 		sesidokterRepository repository.SesiDokterRepository = repository.NewSesiDokterRepository(db)
 		sesidokterService    services.SesiDokterService      = services.NewSesiDokterService(sesidokterRepository)
 		sesidokterController controller.SesiDokterController = controller.NewSesiDokterController(sesidokterService)
+
+		reservasiRepository repository.ReservasiRepository = repository.NewReservasiRepository(db)
+		reservasiService    services.ReservasiService      = services.NewReservasiService(reservasiRepository)
+		reservasiController controller.ReservasiController = controller.NewReservasiController(reservasiService)
 	)
 
 	server := gin.Default()
 	server.Use(middleware.CORSMiddleware())
-	routes.Router(server, userController, jwtService, pasienController, dokterController, transaksiController, ruanganController, perawatController, obatController, sesidokterController)
+	routes.Router(server, userController, jwtService, pasienController, dokterController, transaksiController, ruanganController, perawatController, obatController, sesidokterController, reservasiController)
 
 	port := os.Getenv("PORT")
 	if port == "" {
