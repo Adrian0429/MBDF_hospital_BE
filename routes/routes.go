@@ -14,7 +14,7 @@ func Router(route *gin.Engine, userController controller.UserController, jwtServ
 		pasienRoutes.POST("/register", pasienController.RegisterPasien)
 		pasienRoutes.POST("/login", pasienController.LoginPasien)
 		pasienRoutes.POST("/newTransaksi", transaksiController.NewTransaksi)
-		pasienRoutes.POST("/newReservasi", reservasiController.NewBulkTransaksiReservasi)
+		pasienRoutes.POST("/newReservasi", reservasiController.NewReservasi)
 		pasienRoutes.PUT("/", middleware.Authenticate(jwtService), pasienController.UpdatePasien)
 		pasienRoutes.GET("/me", middleware.Authenticate(jwtService), pasienController.MePasien)
 		pasienRoutes.GET("/jadwalDokter", middleware.Authenticate(jwtService), pasienController.Jadwal_Dokter_User)
