@@ -18,6 +18,7 @@ type DokterController interface {
 	GetDokterByID(ctx *gin.Context)
 	UpdateDoctor(ctx *gin.Context)
 	Jadwal_Dokter_Admin(ctx *gin.Context)
+	GetPolis(ctx *gin.Context)
 }
 
 type dokterController struct {
@@ -144,5 +145,16 @@ func (dc *dokterController) Jadwal_Dokter_Admin(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusOK, jadwal)
+
+}
+
+func (dc *dokterController) GetPolis(ctx *gin.Context) {
+	poli, err := dc.dokterService.GetPolis(ctx.Request.Context())
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, poli)
 
 }

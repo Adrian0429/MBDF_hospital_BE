@@ -84,12 +84,12 @@ func (pr *pasienRepository) GetAllPasien(ctx context.Context) ([]dto.GetAllPasie
 
 func (pr *pasienRepository) GetLatestPembelianObat(ctx context.Context, PasienID string) ([]dto.LatestPembelianObatDTO, error) {
 	var Pembelian []dto.LatestPembelianObatDTO
-	query := `
-		SELECT transaksis.Tanggal, obats.Nama_Obat, pembelian_obats.Jumlah_Obat
-		FROM transaksis
-		JOIN pembelian_obats ON transaksis.ID_Transaksi = pembelian_obats.transaksi_id
-		JOIN obats ON pembelian_obats.obat_id = obats.ID_Obat
-		WHERE transaksis.Pasien_NIK_Pasien = ?;
+	query := `SELECT transaksi_reservasis.tanggal_reservasi, obats.Nama_Obat
+		FROM Reseps
+		JOIN transaksi_reservasis ON transaksi_reservasis.ID_Medical_Record = transaksi_reservasi_id 
+		JOIN obats ON obat_id = obats.ID_Obat
+		WHERE transaksi_reservasi_id IN (SELECT id_medical_record FROM transaksi_reservasis WHERE transaksi_id_transaksi IN 
+										(SELECT id_transaksi FROM transaksis WHERE pasien_nik_pasien IN (SELECT nik_pasien FROM pasiens WHERE nik_pasien = ?)))
 	`
 
 	if err := pr.connection.Raw(query, PasienID).Scan(&Pembelian).Error; err != nil {
@@ -101,8 +101,14 @@ func (pr *pasienRepository) GetLatestPembelianObat(ctx context.Context, PasienID
 
 func (pr *pasienRepository) GetLatestReservation(ctx context.Context, NIK string) ([]dto.AmbilTransaksiTerbaru, error) {
 	var reservasiTerbaru []dto.AmbilTransaksiTerbaru
-	query := "SELECT Tanggal_Reservasi, Nama_Dokter, Diagnosa_Nama_Diagnosa, Nama_Ruangan FROM Pasiens JOIN Transaksis ON NIK_Pasien = Pasien_NIK_Pasien JOIN Transaksi_Reservasis ON ID_Transaksi = Transaksi_ID_Transaksi JOIN Transaksi_Reservasi_Diagnosas ON ID_Medical_Record = Transaksi_Reservasi_ID_Medical_Record JOIN Ruangans ON Ruangan_ID_Ruangan = ID_Ruangan JOIN Sesi_Dokters ON Sesi_Dokter_ID = ID_Sesi JOIN Dokters on Dokter_ID_Dokter = ID_Dokter WHERE NIK_Pasien = ?;"
-	// query := "select * from Jadwal_Dokter"
+	query := `SELECT Tanggal_Reservasi, Nama_Dokter, Diagnosa_Nama_Diagnosa, Nama_Ruangan FROM Pasiens
+JOIN Transaksis ON NIK_Pasien = Pasien_NIK_Pasien 
+JOIN Transaksi_Reservasis ON ID_Transaksi = Transaksi_ID_Transaksi 
+JOIN Transaksi_Reservasi_Diagnosas ON ID_Medical_Record = Transaksi_Reservasi_ID_Medical_Record 
+JOIN Sesi_Dokters ON Sesi_Dokter_ID = ID_Sesi 
+JOIN Dokters on Dokter_ID_Dokter = ID_Dokter 
+JOIN Ruangans ON Sesi_dokters.ruangan_id = ID_Ruangan 
+WHERE kehadiran = true AND NIK_Pasien = ?`
 	if err := pr.connection.Raw(query, NIK).Find(&reservasiTerbaru).Error; err != nil {
 		return nil, err
 	}

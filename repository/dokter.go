@@ -15,6 +15,7 @@ type DokterRepository interface {
 	GetDokterByID(ctx context.Context, DokterID string) (entities.Dokter, error)
 	UpdateDoctor(ctx context.Context, dokter entities.Dokter) error
 	Jadwal_Dokter_Admin(ctx context.Context) ([]dto.Jadwal_Dokter_AdminDTO, error)
+	GetPolis(ctx context.Context) ([]dto.PoliDTO, error)
 }
 
 type dokterRepository struct {
@@ -100,4 +101,14 @@ JOIN Ruangans ON Sesi_Dokters.Ruangan_Id = Id_ruangan;
 		return nil, err
 	}
 	return jadwal, nil
+}
+
+func (dr *dokterRepository) GetPolis(ctx context.Context) ([]dto.PoliDTO, error) {
+	var poli []dto.PoliDTO
+	query := `select kode_poli from polis`
+	if err := dr.connection.Raw(query).Scan(&poli).Error; err != nil {
+		return nil, err
+	}
+	return poli, nil
+
 }

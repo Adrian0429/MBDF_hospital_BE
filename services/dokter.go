@@ -16,6 +16,7 @@ type DokterService interface {
 	GetDokterByID(ctx context.Context, DokterID string) (entities.Dokter, error)
 	UpdateDoctor(ctx context.Context, DokterDTO dto.UpdateDokterDTO) error
 	Jadwal_Dokter_Admin(ctx context.Context) ([]dto.Jadwal_Dokter_AdminDTO, error)
+	GetPolis(ctx context.Context) ([]dto.PoliDTO, error)
 }
 
 type dokterService struct {
@@ -59,4 +60,8 @@ func (ds *dokterService) GetDokterByID(ctx context.Context, DokterID string) (en
 
 func (ds *dokterService) Jadwal_Dokter_Admin(ctx context.Context) ([]dto.Jadwal_Dokter_AdminDTO, error) {
 	return ds.dokterRepository.Jadwal_Dokter_Admin(ctx)
+}
+
+func (ds *dokterService) GetPolis(ctx context.Context) ([]dto.PoliDTO, error) {
+	return ds.dokterRepository.GetPolis(ctx)
 }

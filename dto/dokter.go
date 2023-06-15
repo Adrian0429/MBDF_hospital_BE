@@ -40,3 +40,7 @@ type Jadwal_Dokter_AdminDTO struct {
 	Jenis_Kelamin string `gorm:"type:char(1);not null" json:"jenis_kelamin"`
 	Id_Ruangan    string `gorm:"type:varchar(6)" json:"id_ruangan" binding:"required"`
 }
+
+type PoliDTO struct {
+	Kode_Poli string `gorm:"type:char(4);not null" json:"poli_kode_poli"`
+}

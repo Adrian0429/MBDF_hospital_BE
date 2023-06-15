@@ -50,6 +50,7 @@ func Router(route *gin.Engine, userController controller.UserController, jwtServ
 			dokterRoutes.GET("/:id", dokterController.GetDokterByID)
 			dokterRoutes.PUT("/edit", dokterController.UpdateDoctor)
 			dokterRoutes.GET("/jadwalDokter", dokterController.Jadwal_Dokter_Admin)
+			dokterRoutes.GET("/polis", dokterController.GetPolis)
 		}
 
 		transaksiRoutes := adminRoutes.Group("/transaksi")
