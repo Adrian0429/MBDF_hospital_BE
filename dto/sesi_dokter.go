@@ -19,7 +19,7 @@ type AmbilSesiDTO struct {
 	Jenis_Kelamin    string `gorm:"type:char(1);not null" json:"jenis_kelamin"`
 	No_Telepon       string `gorm:"type:varchar(15);not null" json:"no_telepon"`
 	Harga_Konsultasi string `gorm:"type:money" json:"harga_Konsul"`
-	RuanganID        string `gorm:"type:varchar(5)" json:"Ruangan_ID_Ruangan" binding:"required"`
+	Nama_Ruangan     string `gorm:"type:varchar(40);not null" json:"Nama_Ruangan"`
 }
 
 type AmbilTransaksiTerbaru struct {
