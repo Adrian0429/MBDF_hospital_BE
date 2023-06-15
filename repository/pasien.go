@@ -45,7 +45,6 @@ func (pr *pasienRepository) GetPasienByID(ctx context.Context, PasienID uuid.UUI
 	if err := pr.connection.Table("pasiens").Where("Uid = ?", PasienID).Take(&pasien).Error; err != nil {
 		return entities.Pasien{}, err
 	}
-
 	return pasien, nil
 }
 

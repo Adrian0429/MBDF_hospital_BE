@@ -11,8 +11,9 @@ type PerawatCreateDTO struct {
 }
 
 type GetAllPerawat struct {
-	ID_Perawat   string `gorm:"type:char(4);primaryKey;not null" json:"id_perawat"`
-	Nama_Perawat string `gorm:"type:varchar(50);not null" json:"nama_perawat"`
+	ID_Perawat    string `gorm:"type:char(4);primaryKey;not null" json:"id_perawat"`
+	Nama_Perawat  string `gorm:"type:varchar(50);not null" json:"nama_perawat"`
+	Tanggal_Lahir string `gorm:"type:date;not null" json:"tanggal_lahir"`
 }
 
 type JadwalPerawatDTO struct {
@@ -21,5 +22,4 @@ type JadwalPerawatDTO struct {
 	Jam_Masuk    int    `gorm:"type:int;not null" json:"jam_masuk"`
 	Jam_Keluar   int    `gorm:"type:int;not null" json:"jam_keluar"`
 	Nama_Ruangan string `gorm:"not null" json:"Nama_Ruangan"`
-
 }

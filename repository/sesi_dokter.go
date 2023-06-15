@@ -33,7 +33,7 @@ func (sdr *sesiDokterRepository) RegisterSesiDokter(ctx context.Context, sesiDok
 
 func (sdr *sesiDokterRepository) GetAllSesiDokter(ctx context.Context) ([]dto.AmbilSesiDTO, error) {
 	var sesiDokter []dto.AmbilSesiDTO
-	query := "SELECT ID_Dokter, Nama_Dokter, Hari, Jam_Masuk, Jam_Keluar, Jenis_Kelamin, No_Telepon, Harga_Konsultasi FROM Dokters JOIN Sesi_Dokters ON ID_Dokter = Dokter_ID_Dokter;"
+	query := "SELECT ID_Dokter, Nama_Dokter, Hari, Jam_Masuk, Jam_Keluar, Jenis_Kelamin, No_Telepon, Harga_Konsultasi, ruangan_id  FROM Dokters JOIN Sesi_Dokters ON ID_Dokter = Dokter_ID_Dokter;"
 	// query := "select * from Jadwal_Dokter"
 	if err := sdr.connection.Raw(query).Find(&sesiDokter).Error; err != nil {
 		return nil, err

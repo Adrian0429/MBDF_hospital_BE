@@ -18,7 +18,7 @@ func Router(route *gin.Engine, userController controller.UserController, jwtServ
 		pasienRoutes.PUT("/", middleware.Authenticate(jwtService), pasienController.UpdatePasien)
 		pasienRoutes.GET("/me", middleware.Authenticate(jwtService), pasienController.MePasien)
 		pasienRoutes.GET("/jadwalDokter", middleware.Authenticate(jwtService), pasienController.Jadwal_Dokter_User)
-		pasienRoutes.GET("/ListDokter", middleware.Authenticate(jwtService), dokterController.GetAllDokter)
+		pasienRoutes.GET("/ListDokter", dokterController.GetAllDokter)
 		pasienRoutes.GET("/PembelianObat/:id", middleware.Authenticate(jwtService), pasienController.GetLatestPembelianObat)
 		pasienRoutes.GET("/:nik", pasienController.GetLatestReservation)
 	}
